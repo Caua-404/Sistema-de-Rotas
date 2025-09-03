@@ -1,0 +1,12 @@
+@layer base {
+  body { font-family: var(--font-ui); font-size: var(--fs-base); color: var(--text); background: var(--bg); }
+
+  .btn { cursor: pointer; border: 0; background: none; color: inherit; }
+  .btn-icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+
+  .only-mobile { display: none; }
+  @media (max-width: 960px) { .only-mobile { display: inline-grid; } }
+
+  .topbar__right { display:flex; align-items:center; gap:.5rem; }
+  .theme-controls { display:flex; align-items:center; gap:.5rem; }
+}

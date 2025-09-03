@@ -1,0 +1,46 @@
+/* Tema escuro/claro alinhado à marca (delivery) */
+:root,
+:root[data-bs-theme="dark"]{
+  /* Dark base (seu fundo: #1B1610) */
+  --bg:#1B1610;
+  --surface:#221D16;
+  --primary:#F45A00;         /* ligeiramente mais escuro que #FF5900 p/ contraste */
+  --primary-600:#D85200;     /* hover/pressed */
+  --text:#F5F5F5;
+  --muted:#B9C0CA;
+  --border:#2A241D;
+  --ok:#00C49A; --warn:#FFC857; --danger:#FF3B30;
+
+  --bs-body-bg:var(--bg);
+  --bs-body-color:var(--text);
+  --bs-border-color:var(--border);
+  --bs-primary:var(--primary);
+}
+
+/* Light confortável (off-white) */
+:root[data-bs-theme="light"]{
+  --bg:#FAF8F6;
+  --surface:#FFFFFF;
+  --primary:#FF5900;         /* cor de marca pura no light */
+  --primary-600:#E25500;
+  --text:#1B1610;
+  --muted:#6B6B6B;
+  --border:#E8E2DA;
+  --ok:#00A884; --warn:#D98C00; --danger:#C0362C;
+
+  --bs-body-bg:var(--bg);
+  --bs-body-color:var(--text);
+  --bs-border-color:var(--border);
+  --bs-primary:var(--primary);
+}
+
+/* Integração com Bootstrap (apenas o necessário) */
+.btn-primary{
+  --bs-btn-bg:var(--primary);
+  --bs-btn-border-color:var(--primary);
+  --bs-btn-hover-bg:var(--primary-600);
+  --bs-btn-hover-border-color:var(--primary-600);
+}
+
+/* Sidebar usa o fundo do tema */
+.sidebar{ background:var(--bg); }
