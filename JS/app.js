@@ -1,48 +1,69 @@
-/* App principal: tema, sidebar, autocomplete, painel de status e mapa (Leaflet) */
+/* app.js — tema, sidebar, autocomplete, painel de status e mapa (Leaflet) com init robusto */
 document.addEventListener('DOMContentLoaded', () => {
-  /* ===== Sidebar (mobile): abrir/fechar ===== */
-  const btnOpen = document.getElementById('btnOpenSidebar');
-  const btnClose = document.getElementById('btnCloseSidebar'); // pode não existir
-  const sidebar = document.querySelector('.sidebar');
-
-  btnOpen?.addEventListener('click', () => sidebar.classList.add('is-open'));
-  btnClose?.addEventListener('click', () => sidebar.classList.remove('is-open'));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') sidebar?.classList.remove('is-open'); });
-  document.addEventListener('click', (e) => {
-    if (!sidebar.contains(e.target) && !btnOpen?.contains(e.target)) sidebar?.classList.remove('is-open');
-  });
-
-  /* ===== Navegação: estado ativo ===== */
-  document.querySelectorAll('.nav__item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav__item').forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
+  // ---------- helpers ----------
+  const $  = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
+  const on = (el, ev, selOrFn, fn) => {
+    if (typeof selOrFn === 'function') { el.addEventListener(ev, selOrFn); return; }
+    el.addEventListener(ev, e => {
+      const t = e.target.closest(selOrFn);
+      if (t && el.contains(t)) fn(e, t);
     });
+  };
+
+  // ---------- sidebar (mobile) ----------
+  const sidebar = $('.sidebar');
+  const btnOpen = $('#btnOpenSidebar');
+  const btnClose = $('#btnCloseSidebar'); // pode não existir
+
+  btnOpen?.addEventListener('click', () => sidebar?.classList.add('is-open'));
+  btnClose?.addEventListener('click', () => sidebar?.classList.remove('is-open'));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') sidebar?.classList.remove('is-open');
   });
 
-  /* ===== Tema (switch com knob) ===== */
+  document.addEventListener('pointerdown', (e) => {
+    if (!sidebar || !sidebar.classList.contains('is-open')) return;
+    const isInside = sidebar.contains(e.target);
+    const isOpenBtn = btnOpen?.contains(e.target);
+    if (!isInside && !isOpenBtn) sidebar.classList.remove('is-open');
+  });
+
+  // ---------- navegação: estado ativo ----------
+  on(document, 'click', '.nav__item', (_e, btn) => {
+    $$('.nav__item').forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-current', 'page');
+  });
+
+  // ---------- tema claro/escuro ----------
   const root = document.documentElement;
-  const themeBtn = document.getElementById('themeToggle');
+  const themeBtn = $('#themeToggle');
   const THEME_KEY = 'mr_theme';
 
-  function applyTheme(theme){
+  const applyTheme = (theme) => {
     root.setAttribute('data-bs-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
-    setMapTheme(theme); // sincroniza mapa
-  }
+    try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
+    // sincroniza mapa (se já existir)
+    if (window.__setMapTheme__) window.__setMapTheme__(theme);
+  };
+
   applyTheme(localStorage.getItem(THEME_KEY) || root.getAttribute('data-bs-theme') || 'dark');
 
   themeBtn?.addEventListener('click', () => {
     const next = root.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
     applyTheme(next);
   });
+  // knob interno também alterna
   themeBtn?.querySelector('.theme-switch__knob')?.addEventListener('click', (e) => {
-    e.stopPropagation(); themeBtn.click();
+    e.stopPropagation();
+    themeBtn.click();
   });
 
-  /* ===== Autocomplete (mock) ===== */
-  const input = document.getElementById('searchInput');
-  const list  = document.getElementById('searchSuggest');
+  // ---------- autocomplete (mock) ----------
+  const input = $('#searchInput');
+  const list  = $('#searchSuggest');
   const SUGGESTIONS = [
     {label: 'São Paulo, SP', lat:-23.5505, lng:-46.6333},
     {label: 'Rio de Janeiro, RJ', lat:-22.9068, lng:-43.1729},
@@ -50,34 +71,40 @@ document.addEventListener('DOMContentLoaded', () => {
     {label: 'Avenida Paulista', lat:-23.5614, lng:-46.6557},
     {label: 'Rua XV de Novembro, Curitiba', lat:-25.4284, lng:-49.2733},
   ];
-  function updateSuggestions(value){
-    const v = value.trim().toLowerCase();
-    if (!v){ list.classList.remove('is-open'); list.innerHTML=''; return; }
+
+  const updateSuggestions = (value) => {
+    const v = (value || '').trim().toLowerCase();
+    if (!v) { list?.classList.remove('is-open'); if (list) list.innerHTML=''; return; }
     const items = SUGGESTIONS.filter(s => s.label.toLowerCase().includes(v)).slice(0,8);
-    if (!items.length){ list.classList.remove('is-open'); list.innerHTML=''; return; }
-    list.innerHTML = items.map((s,i)=>`<li role="option" data-i="${i}">${s.label}</li>`).join('');
-    list.classList.add('is-open');
-  }
+    if (!items.length) { list?.classList.remove('is-open'); if (list) list.innerHTML=''; return; }
+    if (list) {
+      list.innerHTML = items.map((s,i)=>`<li role="option" data-i="${i}">${s.label}</li>`).join('');
+      list.classList.add('is-open');
+    }
+  };
+
   input?.addEventListener('input', e => updateSuggestions(e.target.value));
   list?.addEventListener('click', e => {
     const li = e.target.closest('li'); if (!li) return;
     const { i } = li.dataset; const s = SUGGESTIONS[Number(i)];
-    input.value = s.label; list.classList.remove('is-open'); list.innerHTML='';
-    map?.flyTo([s.lat, s.lng], 13, {duration: .6});
+    if (!s) return;
+    if (input) input.value = s.label;
+    list.classList.remove('is-open'); list.innerHTML='';
+    if (map?.flyTo) map.flyTo([s.lat, s.lng], 13, {duration: .6});
   });
 
-  /* ===== KPI + Cards (mock) ===== */
+  // ---------- KPI + cards (mock) ----------
   const orders = [
-    { id:1243, cliente:'Alexandre', entregador:'Lula',   status:'late' },
-    { id:1244, cliente:'Maria Souza', entregador:'Thiago', status:'done' },
-    { id:1245, cliente:'Ana Lima',    entregador:'Pedro',  status:'on'   },
+    { id:1243, cliente:'Alexandre',    entregador:'Lula',   status:'late' },
+    { id:1244, cliente:'Maria Souza',  entregador:'Thiago', status:'done' },
+    { id:1245, cliente:'Ana Lima',     entregador:'Pedro',  status:'on'   },
   ];
-  const ul = document.getElementById('ordersList');
-  const kpiLate = document.getElementById('kpiLate');
-  const kpiDone = document.getElementById('kpiDone');
-  const kpiOn   = document.getElementById('kpiOn');
+  const ul = $('#ordersList');
+  const kpiLate = $('#kpiLate');
+  const kpiDone = $('#kpiDone');
+  const kpiOn   = $('#kpiOn');
 
-  function renderOrders(listData){
+  const renderOrders = (listData) => {
     if (!ul) return;
     ul.innerHTML=''; let late=0, done=0, on=0;
     listData.forEach(o=>{
@@ -98,34 +125,59 @@ document.addEventListener('DOMContentLoaded', () => {
     if (kpiLate) kpiLate.textContent = String(late).padStart(2,'0');
     if (kpiDone) kpiDone.textContent = String(done).padStart(2,'0');
     if (kpiOn)   kpiOn.textContent   = String(on).padStart(2,'0');
-  }
+  };
   renderOrders(orders);
 
-  /* ===== Painel (📦) abrir/fechar ===== */
-  const statusBtn   = document.getElementById('statusToggle');
-  const statusPanel = document.getElementById('statusPanel');
+  // ---------- painel de status abrir/fechar ----------
+  const statusBtn   = $('#statusToggle');
+  const statusPanel = $('#statusPanel');
 
-  function openStatus(){ 
+  const openStatus  = () => {
     statusPanel?.classList.remove('is-collapsed');
     statusBtn?.setAttribute('aria-expanded', 'true');
     if (window.__invalidateMap__) setTimeout(()=>window.__invalidateMap__(), 60);
-  }
-  function closeStatus(){ 
+  };
+  const closeStatus = () => {
     statusPanel?.classList.add('is-collapsed');
     statusBtn?.setAttribute('aria-expanded', 'false');
-  }
+  };
+
   statusBtn?.addEventListener('click', () => {
     if (!statusPanel) return;
     statusPanel.classList.contains('is-collapsed') ? openStatus() : closeStatus();
   });
-  if (window.matchMedia('(min-width: 961px)').matches) closeStatus(); else openStatus();
 
-  /* ===== Leaflet Map ===== */
+  const mq = window.matchMedia('(min-width: 961px)');
+  mq.matches ? closeStatus() : openStatus();
+  mq.addEventListener?.('change', (e) => { e.matches ? closeStatus() : openStatus(); });
+
+  // ---------- MAPA (Leaflet) — init robusto ----------
+  const mapEl = $('#map');
   let map, darkTiles, lightTiles, currentTiles;
 
-  function initMap(){
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
+  // expõe helpers globais para outros módulos
+  window.__setMapTheme__ = (theme) => {
+    if (!map || !darkTiles || !lightTiles) return;
+    const newTiles = theme === 'light' ? lightTiles : darkTiles;
+    if (currentTiles) map.removeLayer(currentTiles);
+    newTiles.addTo(map);
+    currentTiles = newTiles;
+    setTimeout(() => map.invalidateSize(), 120);
+  };
+  window.__invalidateMap__ = () => { try { map?.invalidateSize(); } catch (_) {} };
+
+  const createMapIfReady = () => {
+    if (!mapEl) return; // sem container
+    const w = mapEl.offsetWidth;
+    const h = mapEl.offsetHeight;
+    if (w < 100 || h < 100) return; // ainda sem tamanho útil
+
+    if (typeof L === 'undefined') {
+      console.error('[MAPA] Leaflet não carregou. Verifique o <script src="https://unpkg.com/leaflet...">');
+      return;
+    }
+    if (map) return; // já criado
+
     map = L.map(mapEl, { center:[-23.55,-46.63], zoom:12, zoomControl:true });
 
     darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -135,11 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
       attribution:'© OpenStreetMap, © CARTO'
     });
 
-    currentTiles = (document.documentElement.getAttribute('data-bs-theme') === 'light') ? lightTiles : darkTiles;
+    const initialTheme = root.getAttribute('data-bs-theme') === 'light' ? 'light' : 'dark';
+    currentTiles = initialTheme === 'light' ? lightTiles : darkTiles;
     currentTiles.addTo(map);
 
     setTimeout(()=> map.invalidateSize(), 0);
 
+    // POIs exemplo
     const restaurants = [
       {name:'Restaurante Natsu', lat:-23.561, lng:-46.657},
       {name:'Cantina da Praça', lat:-23.559, lng:-46.635},
@@ -160,36 +214,54 @@ document.addEventListener('DOMContentLoaded', () => {
       'Hospitais': hospGroup,
       'Semáforos': trafGroup
     }, {collapsed:true}).addTo(map);
+
+    console.log('[MAPA] Inicializado com', w, 'x', h);
+  };
+
+  // tenta criar já
+  createMapIfReady();
+
+  // cria quando o container ganhar tamanho
+  if (mapEl && 'ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => createMapIfReady());
+    ro.observe(mapEl);
   }
 
-  function setMapTheme(theme){
-    if (!map) return;
-    const newTiles = theme === 'light' ? lightTiles : darkTiles;
-    if (currentTiles) map.removeLayer(currentTiles);
-    newTiles.addTo(map); currentTiles = newTiles;
-    setTimeout(()=> map.invalidateSize(), 150);
+  // plano B: após load, força min-height via atributo e tenta de novo
+  window.addEventListener('load', () => {
+    if (!map && mapEl) {
+      root.setAttribute('data-debug-map', '1'); // min-height já tratado no CSS
+      setTimeout(createMapIfReady, 100);
+    }
+  });
+
+  // quando clicar no avatar → redireciona para settings.html
+document.addEventListener('DOMContentLoaded', ()=>{
+  const avatar = document.getElementById('userAvatar');
+  if (!avatar) return;
+
+  function goSettings(){
+    window.location.href = 'settings.html';
   }
 
-  initMap();
+  avatar.addEventListener('click', goSettings);
+  avatar.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') goSettings(); });
+});
 
-  /* ===== Sessão: pega usuário salvo no login e preenche ===== */
-(function hydrateUser(){
-  try {
-    const data = JSON.parse(sessionStorage.getItem('mr_auth') || 'null');
-    const name = data?.user || 'Visitante';
-    const greetSpan = document.getElementById('greetName');
-    if (greetSpan) greetSpan.textContent = name;
 
-    // Se você quiser exigir login, descomente:
-    if (!data) window.location.href = 'login.html';
+  // ---------- sessão: preenche saudação ----------
+  (function hydrateUser(){
+    try {
+      const data = JSON.parse(sessionStorage.getItem('mr_auth') || 'null');
+      const name = data?.user || 'Visitante';
+      const greetSpan = $('#greetName');
+      if (greetSpan) greetSpan.textContent = name;
 
-    // Avatar: se no futuro você salvar um avatar na sessão/localStorage, use:
-    // const avatar = data?.avatar || localStorage.getItem('mr_avatar');
-    // if (avatar) document.getElementById('userAvatar').src = avatar;
-  } catch (e) {
-    // fallback seguro
-    const greetSpan = document.getElementById('greetName');
-    if (greetSpan) greetSpan.textContent = 'Visitante';
-  }
-})();
+      // Se quiser exigir login para ver a interface:
+      // if (!data) window.location.href = 'index.html';
+    } catch {
+      const greetSpan = $('#greetName');
+      if (greetSpan) greetSpan.textContent = 'Visitante';
+    }
+  })();
 });

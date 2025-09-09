@@ -1,7 +1,0 @@
-@layer reset {
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body { margin: 0; line-height: 1.4; -webkit-font-smoothing: antialiased; }
-  img, svg, video { max-width: 100%; display: block; }
-  button, input, textarea, select { font: inherit; }
-}
