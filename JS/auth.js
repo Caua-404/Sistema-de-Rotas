@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userField = document.getElementById('user');
         if (userField) userField.value = lastUser;
       }
+      // login ok → vai para a interface
       window.location.href = 'interface.html';
     });
   }
