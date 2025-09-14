@@ -390,3 +390,42 @@ html[data-acc-keyboard="true"] :focus-visible{
   transform: scale(1.05);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 40%, transparent);
 }
+
+/* ====== Header da seção e pills visíveis em ambos temas ====== */
+.section__header{
+  display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+}
+.pill{
+  display:inline-block;
+  padding:.35rem .75rem;
+  border-radius:999px;
+  font-size:.85rem; font-weight:600; line-height:1.2;
+  border:1px solid var(--border);
+  background: var(--surface); color: var(--text);
+}
+.pill--accent{
+  border-color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 18%, var(--surface));
+  color: var(--primary);
+}
+/* ajustes por tema */
+:root[data-bs-theme="light"] .pill{ background:#f3f3f3; color:#111; border-color:#ddd; }
+:root[data-bs-theme="light"] .pill--accent{ background: color-mix(in oklab, var(--primary) 22%, white); color:#fff; }
+:root[data-bs-theme="dark"] .pill{ background:#2a241d; color:#eee; border-color:#3a322a; }
+:root[data-bs-theme="dark"] .pill--accent{ background: var(--primary); color:#fff; }
+
+/* Lista de sessões adaptável */
+@media (max-width: 600px){
+  .session-item{
+    display:grid;
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: auto auto;
+    gap:.35rem .6rem;
+    align-items: start;
+  }
+  .session-item__actions{
+    grid-column: 1 / -1;
+    display:flex; gap:.5rem; flex-wrap:wrap;
+    justify-content: flex-end;
+  }
+}

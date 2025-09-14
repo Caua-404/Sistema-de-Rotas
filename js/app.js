@@ -11,23 +11,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // ---------- sidebar (mobile) ----------
-  const sidebar = $('.sidebar');
-  const btnOpen = $('#btnOpenSidebar');
-  const btnClose = $('#btnCloseSidebar'); // pode não existir
+  // ---------- Sidebar (mobile): abrir/fechar ----------
+  const btnOpen  = $('#btnOpenSidebar');
+  const sidebar  = $('.sidebar');
 
   btnOpen?.addEventListener('click', () => sidebar?.classList.add('is-open'));
-  btnClose?.addEventListener('click', () => sidebar?.classList.remove('is-open'));
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') sidebar?.classList.remove('is-open');
-  });
 
   document.addEventListener('pointerdown', (e) => {
     if (!sidebar || !sidebar.classList.contains('is-open')) return;
-    const isInside = sidebar.contains(e.target);
+    const isInside  = sidebar.contains(e.target);
     const isOpenBtn = btnOpen?.contains(e.target);
     if (!isInside && !isOpenBtn) sidebar.classList.remove('is-open');
+  });
+
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') sidebar?.classList.remove('is-open'); });
+
+  const mqDesktop = window.matchMedia('(min-width: 961px)');
+  mqDesktop.addEventListener?.('change', (ev) => {
+    if (ev.matches) sidebar?.classList.remove('is-open');
+    if (window.__invalidateMap__) setTimeout(()=>window.__invalidateMap__(), 60);
   });
 
   // ---------- navegação: estado ativo ----------
@@ -45,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const applyTheme = (theme) => {
     root.setAttribute('data-bs-theme', theme);
     try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
-    // sincroniza mapa (se já existir)
     if (window.__setMapTheme__) window.__setMapTheme__(theme);
   };
 
@@ -55,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const next = root.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
     applyTheme(next);
   });
-  // knob interno também alterna
   themeBtn?.querySelector('.theme-switch__knob')?.addEventListener('click', (e) => {
     e.stopPropagation();
     themeBtn.click();
@@ -93,69 +93,102 @@ document.addEventListener('DOMContentLoaded', () => {
     if (map?.flyTo) map.flyTo([s.lat, s.lng], 13, {duration: .6});
   });
 
-  // ---------- KPI + cards (mock) ----------
-  const orders = [
-    { id:1243, cliente:'Alexandre',    entregador:'Lula',   status:'late' },
-    { id:1244, cliente:'Maria Souza',  entregador:'Thiago', status:'done' },
-    { id:1245, cliente:'Ana Lima',     entregador:'Pedro',  status:'on'   },
-  ];
-  const ul = $('#ordersList');
-  const kpiLate = $('#kpiLate');
-  const kpiDone = $('#kpiDone');
-  const kpiOn   = $('#kpiOn');
+// ----- Status: FAB + abrir/fechar + persistência -----
+const statusBtn   = $('#statusToggle');
+const statusPanel = $('#statusPanel');
+const STATUS_KEY  = 'mr_status_open';
 
-  const renderOrders = (listData) => {
-    if (!ul) return;
-    ul.innerHTML=''; let late=0, done=0, on=0;
-    listData.forEach(o=>{
-      const li = document.createElement('li');
-      const cls = o.status === 'late' ? 'card card--late'
-               : o.status === 'done' ? 'card card--done'
-               : 'card card--on';
-      li.className = cls;
-      li.innerHTML = `
-        <div class="card__title">Pedido #${o.id} — ${o.cliente}</div>
-        <div class="card__meta">Entregador: ${o.entregador}</div>
-      `;
-      ul.appendChild(li);
-      if(o.status==='late') late++;
-      else if(o.status==='done') done++;
-      else on++;
-    });
+function openStatus(){
+  statusPanel?.classList.remove('is-collapsed');
+  statusBtn?.setAttribute('aria-expanded','true');
+  try { localStorage.setItem(STATUS_KEY, '1'); } catch {}
+  if (window.__invalidateMap__) setTimeout(()=>window.__invalidateMap__(), 60);
+}
+function closeStatus(){
+  statusPanel?.classList.add('is-collapsed');
+  statusBtn?.setAttribute('aria-expanded','false');
+  try { localStorage.setItem(STATUS_KEY, '0'); } catch {}
+  if (window.__invalidateMap__) setTimeout(()=>window.__invalidateMap__(), 60);
+}
+
+statusBtn?.addEventListener('click', ()=>{
+  if (!statusPanel) return;
+  statusPanel.classList.contains('is-collapsed') ? openStatus() : closeStatus();
+});
+
+// inicialização: SEMPRE fechado, a não ser que o usuário tenha salvo “aberto”
+(() => {
+  const saved = (()=>{ try { return localStorage.getItem(STATUS_KEY); } catch { return null; } })();
+  if (saved === '1') openStatus(); else closeStatus();
+})();
+
+// em mudanças de breakpoint NÃO forçamos abrir/fechar; só recalcula o mapa
+const mqStatus = window.matchMedia('(min-width: 961px)');
+mqStatus.addEventListener?.('change', () => {
+  if (window.__invalidateMap__) setTimeout(()=>window.__invalidateMap__(), 60);
+});
+
+
+  // dados mock
+  const orders = [
+    { id:1243, cliente:'Alexandre',  entregador:'Lula',   status:'late', avatar:'assets/Alexandre.jpg' },
+    { id:1244, cliente:'Maria Souza',entregador:'Thiago', status:'done', avatar:'assets/Thiago.jpg' },
+    { id:1245, cliente:'Ana Lima',   entregador:'Pedro',  status:'on',   avatar:'assets/Pedro.jpg' },
+  ];
+
+  const listEl   = $('#ordersList');
+  const kpiLate  = $('#kpiLate');
+  const kpiDone  = $('#kpiDone');
+  const kpiOn    = $('#kpiOn');
+
+  let currentFilter = 'all';
+
+  function renderKPIs(){
+    const late = orders.filter(o=>o.status==='late').length;
+    const done = orders.filter(o=>o.status==='done').length;
+    const on   = orders.filter(o=>o.status==='on').length;
     if (kpiLate) kpiLate.textContent = String(late).padStart(2,'0');
     if (kpiDone) kpiDone.textContent = String(done).padStart(2,'0');
     if (kpiOn)   kpiOn.textContent   = String(on).padStart(2,'0');
-  };
-  renderOrders(orders);
+  }
+  function classByStatus(s){
+    if (s === 'done') return 'card card--done';  // verde
+    if (s === 'late') return 'card card--late';  // vermelho
+    if (s === 'on')   return 'card card--on';    // amarelo
+    return 'card';
+  }
+  function renderList(){
+    if (!listEl) return;
+    listEl.innerHTML = '';
+    const data = currentFilter === 'all' ? orders : orders.filter(o=>o.status===currentFilter);
+    data.forEach(o=>{
+      const li = document.createElement('li');
+      li.className = classByStatus(o.status);
+      li.innerHTML = `
+        <div class="card__title">Pedido #${o.id} — ${o.cliente}</div>
+        <div class="card__meta">Entregador: ${o.entregador}</div>
+        <img class="card__avatar" alt="Foto de ${o.entregador}" src="${o.avatar || 'assets/user.jpg'}">
+      `;
+      listEl.appendChild(li);
+    });
+  }
+  renderKPIs();
+  renderList();
 
-  // ---------- painel de status abrir/fechar ----------
-  const statusBtn   = $('#statusToggle');
-  const statusPanel = $('#statusPanel');
-
-  const openStatus  = () => {
-    statusPanel?.classList.remove('is-collapsed');
-    statusBtn?.setAttribute('aria-expanded', 'true');
-    if (window.__invalidateMap__) setTimeout(()=>window.__invalidateMap__(), 60);
-  };
-  const closeStatus = () => {
-    statusPanel?.classList.add('is-collapsed');
-    statusBtn?.setAttribute('aria-expanded', 'false');
-  };
-
-  statusBtn?.addEventListener('click', () => {
-    if (!statusPanel) return;
-    statusPanel.classList.contains('is-collapsed') ? openStatus() : closeStatus();
+  // filtros (pílulas .pill dentro do aside.status)
+  $$('.status .pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      $$('.status .pill').forEach(b=>b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      currentFilter = btn.dataset.filter || 'all';
+      renderList();
+    });
   });
-
-  const mq = window.matchMedia('(min-width: 961px)');
-  mq.matches ? closeStatus() : openStatus();
-  mq.addEventListener?.('change', (e) => { e.matches ? closeStatus() : openStatus(); });
 
   // ---------- MAPA (Leaflet) — init robusto ----------
   const mapEl = $('#map');
   let map, darkTiles, lightTiles, currentTiles;
 
-  // expõe helpers globais para outros módulos
   window.__setMapTheme__ = (theme) => {
     if (!map || !darkTiles || !lightTiles) return;
     const newTiles = theme === 'light' ? lightTiles : darkTiles;
@@ -167,16 +200,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.__invalidateMap__ = () => { try { map?.invalidateSize(); } catch (_) {} };
 
   const createMapIfReady = () => {
-    if (!mapEl) return; // sem container
+    if (!mapEl) return;
     const w = mapEl.offsetWidth;
     const h = mapEl.offsetHeight;
-    if (w < 100 || h < 100) return; // ainda sem tamanho útil
+    if (w < 100 || h < 100) return;
 
     if (typeof L === 'undefined') {
       console.error('[MAPA] Leaflet não carregou. Verifique o <script src="https://unpkg.com/leaflet...">');
       return;
     }
-    if (map) return; // já criado
+    if (map) return;
 
     map = L.map(mapEl, { center:[-23.55,-46.63], zoom:12, zoomControl:true });
 
@@ -218,47 +251,27 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('[MAPA] Inicializado com', w, 'x', h);
   };
 
-  // tenta criar já
   createMapIfReady();
 
-  // cria quando o container ganhar tamanho
   if (mapEl && 'ResizeObserver' in window) {
     const ro = new ResizeObserver(() => createMapIfReady());
     ro.observe(mapEl);
   }
 
-  // plano B: após load, força min-height via atributo e tenta de novo
   window.addEventListener('load', () => {
     if (!map && mapEl) {
-      root.setAttribute('data-debug-map', '1'); // min-height já tratado no CSS
+      root.setAttribute('data-debug-map', '1');
       setTimeout(createMapIfReady, 100);
     }
   });
 
-  // quando clicar no avatar → redireciona para settings.html
-document.addEventListener('DOMContentLoaded', ()=>{
-  const avatar = document.getElementById('userAvatar');
-  if (!avatar) return;
-
-  function goSettings(){
-    window.location.href = 'settings.html';
-  }
-
-  avatar.addEventListener('click', goSettings);
-  avatar.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') goSettings(); });
-});
-
-
-  // ---------- sessão: preenche saudação ----------
+  // ---------- Saudação ----------
   (function hydrateUser(){
     try {
       const data = JSON.parse(sessionStorage.getItem('mr_auth') || 'null');
       const name = data?.user || 'Visitante';
       const greetSpan = $('#greetName');
       if (greetSpan) greetSpan.textContent = name;
-
-      // Se quiser exigir login para ver a interface:
-      // if (!data) window.location.href = 'index.html';
     } catch {
       const greetSpan = $('#greetName');
       if (greetSpan) greetSpan.textContent = 'Visitante';

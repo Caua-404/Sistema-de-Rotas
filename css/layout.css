@@ -1,11 +1,13 @@
+/* ====== DESKTOP (padrão) ====== */
 .app{
   display: grid;
   grid-template-columns: 260px 1fr;
-  grid-template-rows: 64px 1fr;
+  height: 52px;
   grid-template-areas:
     "sidebar topbar"
     "sidebar main";
   min-height: 100vh;
+  gap: 0; /* sem “gutter” */
 }
 
 .sidebar{
@@ -13,8 +15,11 @@
   background: var(--bg);
   border-right: 1px solid var(--border);
   padding: var(--space-3);
-  position: relative;
+  position: static; /* fica no fluxo no desktop */
+  box-shadow: none;
+  z-index: 10;
 }
+
 .brand{ display: flex; align-items: center; justify-content: space-between; padding-right: .5rem; }
 
 .topbar{
@@ -25,7 +30,7 @@
   padding: 0 var(--space-3);
 }
 
-.content{ grid-area: topbar / topbar / main / main; }
+.content{ grid-area: main; } /* ocupa área principal */
 .main{ grid-area: main; overflow: hidden; }
 
 .map-wrap{
@@ -38,6 +43,7 @@
 #map.map{
   position: absolute; inset: 0;
   width: 100%; height: 100%;
+  z-index: 0; /* base */
 }
 
 .status{
@@ -46,17 +52,95 @@
   border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
 }
 
-@media (max-width:960px){
+/* ====== MOBILE (≤960px) ====== */
+@media (max-width: 960px){
+  /* App vira coluna e ocupa altura real do aparelho */
   .app{
     grid-template-columns: 1fr;
+    height: 64;
     grid-template-areas: "topbar" "main";
+    min-height: 100dvh;
   }
+
+  /* Topbar fixa no topo */
+  .topbar {
+  grid-area: topbar;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;      /* já centraliza verticalmente */
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  height: 52px;             /* altura reduzida */
+  line-height: 1;           /* evita que o texto fique “esticado” */
+}
+
+.topbar input,
+.topbar .theme-switch,
+.topbar #userAvatar {
+  height: 36px;             /* menor que os 44/48px originais */
+}
+
+.greet {
+  font-size: .9rem;
+  line-height: 1;           /* mantém alinhado */
+  display: flex;
+  align-items: center;      /* força centralização com o avatar */
+}
+
+
+  /* Sidebar vira off-canvas (acima do mapa) */
   .sidebar{
-    position: fixed; inset: 0 auto 0 0; width: 280px;
-    translate: -100% 0; transition: .25s; z-index: 40;
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(82vw, 320px);
+    translate: -100% 0;
+    transition: translate .28s cubic-bezier(.22,.61,.36,1);
+    z-index: 2000;            /* acima do Leaflet */
+    background: var(--bg);
+    border-right: none;       /* evita “risco branco” no mobile */
     box-shadow: var(--shadow-2);
   }
   .sidebar.is-open{ translate: 0 0; }
-  .status{ position: static; width: auto; margin: 12px; }
-  #map.map{ position: relative; height: 480px; }
+
+  /* Backdrop transparente (sem cinza) e sem bloquear clique */
+  .sidebar::after{
+    content:"";
+    position: fixed; inset: 0;
+    background: transparent;
+    opacity: 0; pointer-events: none;
+  }
+
+  /* Conteúdo principal */
+  .content{ grid-area: main; }
+  .main{ grid-area: main; overflow: visible; }
+
+  /* Mapa com altura real abaixo da topbar */
+  .map-wrap{
+    position: relative;
+    height: calc(100dvh - 56px);
+    min-height: 420px;
+  }
+  #map.map{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0; /* base */
+  }
+
+  /* Controles do Leaflet abaixo da sidebar (mas acima do mapa) */
+  .leaflet-control-container{ z-index: 1200; }
+
+  /* Painel de status como bloco normal */
+  .status{
+    position: static !important;
+    width: auto !important;
+    margin: 12px !important;
+    z-index: auto !important;
+  }
+}
+
+/* ====== EXTRAS Desktop ====== */
+@media (min-width: 961px){
+  /* o hambúrguer não aparece no desktop */
+  #btnOpenSidebar{ display: none !important; }
 }
