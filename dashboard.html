@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relatório — Moto Rota</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS do app -->
+  <link rel="stylesheet" href="css/themes/theme-delivery.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Menu lateral">
+    <div class="brand">
+      <span class="logo">
+        <span class="logo__left">MOTO</span>
+        <span class="logo__gap"><img src="assets/Logo.png" alt=""></span>
+        <span class="logo__right">ROTA</span>
+      </span>
+    </div>
+
+    <nav class="nav">
+      <a class="nav__item" href="interface.html">
+        <span class="nav__icon" aria-hidden="true">🏠</span><span class="nav__label">Interface</span>
+      </a>
+      <button class="nav__item" type="button">
+        <span class="nav__icon" aria-hidden="true">📦</span><span class="nav__label">Entregas</span>
+      </button>
+      <button class="nav__item" type="button">
+        <span class="nav__icon" aria-hidden="true">🛵</span><span class="nav__label">Motoboys</span>
+      </button>
+      <a class="nav__item is-active" aria-current="page" href="report.html">
+        <span class="nav__icon" aria-hidden="true">📈</span><span class="nav__label">Relatório</span>
+      </a>
+      <a class="nav__item" href="settings.html" style="text-decoration:none">
+        <span class="nav__icon" aria-hidden="true">⚙️</span><span class="nav__label">Configuração</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo -->
+  <div class="content">
+    <header class="topbar">
+      <button class="btn btn-icon only-mobile" id="btnOpenSidebar" aria-label="Abrir menu">☰</button>
+
+      <!-- Busca -->
+      <div class="search" role="search" aria-label="Buscar">
+        <input id="searchInput" class="search__input" type="search" autocomplete="off"
+               placeholder="Buscar cidade, estado, rua..." />
+        <ul id="searchSuggest" class="search__suggestions" role="listbox" aria-label="Sugestões"></ul>
+      </div>
+
+      <div class="topbar__right">
+        <button id="themeToggle" class="theme-switch" type="button" aria-label="Alternar tema">
+          <span class="theme-switch__knob" aria-hidden="true"></span>
+        </button>
+
+        <!-- Usuário -->
+        <div class="userbox" aria-label="Usuário logado">
+          <a href="settings.html" class="avatar-link" id="avatarLink" aria-label="Abrir configurações">
+            <img id="userAvatar" class="userbox__avatar" src="assets/user.jpg" alt="Avatar do usuário">
+          </a>
+          <div class="greet">Olá, <strong id="greetName">Visitante</strong></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div style="padding:16px">
+        <h1 class="mb-3">Relatório</h1>
+        <!-- container para gráficos/widgets do dashboard -->
+        <div id="dashRoot"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Libs -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- App base (tema, sidebar, busca) -->
+  <script type="module" src="js/app.js"></script>
+
+  <!-- Dashboard desta página -->
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

@@ -429,3 +429,58 @@
 
 /* se você ainda usa .card--warn, mantenha como alias do “on” */
 .card--warn{ background: var(--warn); color:#1b1b1b; }
+
+.status__actions .pill{ margin-left:.35rem; }
+.card__actions .pill{ background:#fff2; color:#fff; border-color:#fff5; }
+[data-bs-theme="light"] .card__actions .pill{ background:#0002; color:#111; border-color:#0002; }
+
+/* Waze iframe full-bleed */
+.map--waze { position: absolute; inset: 0; }
+.map--waze iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; border: 0;
+}
+
+/* Switch de provedor no canto superior direito do mapa */
+.map-provider-switch{
+  position: absolute;
+  top: 12px; right: 12px;
+  display: flex; gap: .4rem;
+  z-index: 1200;
+}
+.btnX--ghost{
+  background: rgba(0,0,0,.30);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.25);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: .4rem .8rem;
+}
+[data-bs-theme="light"] .btnX--ghost{
+  background: rgba(255,255,255,.80);
+  color: #111;
+  border-color: rgba(0,0,0,.12);
+}
+.map-provider-switch .is-active{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 30%, transparent);
+}
+
+/* links da sidebar não sublinhados */
+.nav__item { text-decoration: none; }
+
+/* estado ativo (funciona para <a>) */
+.nav__item.is-active{
+  background: var(--primary);
+  border-color: var(--primary);
+  color:#fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,.26),
+              0 0 8px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+.nav__item.is-active .nav__label,
+.nav__item.is-active .nav__icon{ color:#fff; }
+
+/* tema claro: itens não ativos continuam escuros */
+:root[data-bs-theme="light"] .nav__item:not(.is-active),
+:root[data-bs-theme="light"] .nav__item:not(.is-active) .nav__label{ color:#111; }
+:root[data-bs-theme="light"] .nav__item:not(.is-active) .nav__icon{ color:#111; }
