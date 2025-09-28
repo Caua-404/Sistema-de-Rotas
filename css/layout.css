@@ -1,136 +1,119 @@
-/* ====== DESKTOP (padrão) ====== */
-.app{
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  height: 52px;
-  grid-template-areas:
-    "sidebar topbar"
-    "sidebar main";
-  min-height: 100vh;
-  gap: 0; /* sem “gutter” */
+/* Altura da topbar (desktop/mobile) */
+:root { --topbar-h: 64px; }
+@media (max-width:960px){
+  :root { --topbar-h: 52px; }
 }
 
-.sidebar{
-  grid-area: sidebar;
-  background: var(--bg);
-  border-right: 1px solid var(--border);
-  padding: var(--space-3);
-  position: static; /* fica no fluxo no desktop */
-  box-shadow: none;
-  z-index: 10;
-}
+/* ===== BASE ===== */
+html, body { height: 100%; }
+body { background: var(--surface-1); color: var(--text); }
 
-.brand{ display: flex; align-items: center; justify-content: space-between; padding-right: .5rem; }
+.app { min-height: 100%; }      /* sem grid/flex aqui! */
+
+/* ===== SIDEBAR FIXA (sidebar é estilizada em components.sidebar.css) ===== */
+/* Nada aqui: somente garantimos que o conteúdo desvie da sidebar via padding. */
+
+/* ===== CONTEÚDO / TOPO ===== */
+.content { 
+  padding-left: var(--sidebar-w);   /* desvia da sidebar fixa no desktop */
+  min-width: 0;
+}
 
 .topbar{
-  grid-area: topbar;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: var(--space-3);
-  padding: 0 var(--space-3);
+  position: sticky;
+  top: 0;
+  z-index: 950;                     /* acima do mapa e da sidebar */
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--surface-2);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px;
 }
+.topbar__right{ margin-left:auto; display:flex; align-items:center; gap:12px; }
 
-.content{ grid-area: main; } /* ocupa área principal */
-.main{ grid-area: main; overflow: hidden; }
+/* ===== MAIN / MAPA ===== */
+/* Nada de espaço extra: mapa ocupa o restante inteiro */
+.main{ padding: 0; }
 
 .map-wrap{
   position: relative;
-  height: calc(100vh - 64px);
-  background: #111;
-  min-height: 420px;
+  height: calc(100vh - var(--topbar-h));
+  min-height: 320px;
+  margin: 0;
 }
-/* Leaflet container */
+
 #map.map{
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  z-index: 0; /* base */
+  z-index: 0;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
+/* Painel de status (desktop) */
 .status{
   position: absolute; top: 80px; right: 24px; width: 340px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
 }
 
-/* ====== MOBILE (≤960px) ====== */
+/* ===== MOBILE (≤960px) ===== */
+.only-mobile{ display: none; }
+
 @media (max-width: 960px){
-  /* App vira coluna e ocupa altura real do aparelho */
-  .app{
-    grid-template-columns: 1fr;
-    height: 64;
-    grid-template-areas: "topbar" "main";
-    min-height: 100dvh;
-  }
+  .content{ padding-left: 0; }           /* sem deslocamento no mobile */
+  .only-mobile{ display: inline-flex; }
 
-  /* Topbar fixa no topo */
-  .topbar {
-  grid-area: topbar;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;      /* já centraliza verticalmente */
-  gap: var(--space-3);
-  padding: 0 var(--space-3);
-  height: 52px;             /* altura reduzida */
-  line-height: 1;           /* evita que o texto fique “esticado” */
-}
-
-.topbar input,
-.topbar .theme-switch,
-.topbar #userAvatar {
-  height: 36px;             /* menor que os 44/48px originais */
-}
-
-.greet {
-  font-size: .9rem;
-  line-height: 1;           /* mantém alinhado */
-  display: flex;
-  align-items: center;      /* força centralização com o avatar */
+  /* Topbar enxuta no mobile (mantém seu comportamento) */
+ .topbar{
+  position: sticky;
+  top: 0;
+  z-index: 950;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--surface-2);
+  height: var(--topbar-h);              /* controla altura fixa */
+  padding: 0 16px;                      /* só laterais */
+  display: flex; align-items: center; gap: 12px;
 }
 
 
-  /* Sidebar vira off-canvas (acima do mapa) */
-  .sidebar{
-    position: fixed;
-    inset: 0 auto 0 0;
-    width: min(82vw, 320px);
-    translate: -100% 0;
-    transition: translate .28s cubic-bezier(.22,.61,.36,1);
-    z-index: 2000;            /* acima do Leaflet */
-    background: var(--bg);
-    border-right: none;       /* evita “risco branco” no mobile */
-    box-shadow: var(--shadow-2);
-  }
-  .sidebar.is-open{ translate: 0 0; }
+  /* Sidebar vira overlay (definido em components.sidebar.css).
+     Aqui só garantimos o conteúdo. */
+  .main{ padding: 12px 12px 20px; }
 
-  /* Backdrop transparente (sem cinza) e sem bloquear clique */
-  .sidebar::after{
-    content:"";
-    position: fixed; inset: 0;
-    background: transparent;
-    opacity: 0; pointer-events: none;
-  }
+ /* Remover QUALQUER borda/outline do mapa (tem prioridade sobre components.css) */
+.map,
+#map,
+.map-wrap,
+.leaflet-container,
+#wazeFrame {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important; /* evita halo em temas escuros */
+}
 
-  /* Conteúdo principal */
-  .content{ grid-area: main; }
-  .main{ grid-area: main; overflow: visible; }
+/* (Opcional) manter cantos arredondados do container do mapa */
+.map { border-radius: 12px; overflow: hidden; }
 
-  /* Mapa com altura real abaixo da topbar */
-  .map-wrap{
-    position: relative;
-    height: calc(100dvh - 56px);
-    min-height: 420px;
-  }
-  #map.map{
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    z-index: 0; /* base */
-  }
 
-  /* Controles do Leaflet abaixo da sidebar (mas acima do mapa) */
+/* O Leaflet injeta .leaflet-container — forçamos sem fundo/borda */
+.leaflet-container{
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+}
+
+/* Já está no interface.css, mas reforçando: sem borda no Waze */
+#wazeFrame{ border: 0 !important; }
+
+
+  /* Controles do Leaflet acima do mapa */
   .leaflet-control-container{ z-index: 1200; }
 
-  /* Painel de status como bloco normal */
+  /* Status como bloco normal no mobile */
   .status{
     position: static !important;
     width: auto !important;
@@ -139,8 +122,8 @@
   }
 }
 
-/* ====== EXTRAS Desktop ====== */
+/* ===== EXTRAS Desktop ===== */
 @media (min-width: 961px){
-  /* o hambúrguer não aparece no desktop */
-  #btnOpenSidebar{ display: none !important; }
+  #btnOpenSidebar{ display: none !important; } /* hambúrguer só no mobile */
 }
+

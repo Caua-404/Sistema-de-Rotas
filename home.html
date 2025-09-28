@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Moto Rotas — Restaurantes</title>
+
+  <!-- CSS do app -->
+  <link rel="stylesheet" href="css/themes/theme-delivery.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/components.sidebar.css">
+
+  <!-- CSS da página -->
+  <link rel="stylesheet" href="css/pages/home.css">
+</head>
+<body class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="app-sidebar" aria-label="Menu lateral"></aside>
+
+  <!-- Conteúdo -->
+  <div class="content">
+    <header class="topbar">
+      <button class="btn btn-icon only-mobile" id="btnOpenSidebar" aria-label="Abrir menu">☰</button>
+
+      <div class="topbar__right">
+        <a href="cart.html" class="btnX btnX--ghost">Carrinho</a>
+
+        <!-- Botão de tema padrão do projeto -->
+        <button id="themeToggle" class="theme-switch" type="button" aria-label="Alternar tema">
+          <span class="theme-switch__knob" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <header class="page-header">
+        <h1 class="page-title">Restaurantes</h1>
+        <div class="filters" role="group" aria-label="Filtros">
+          <input id="search" class="input" type="search" placeholder="Buscar por nome ou cozinha" autocomplete="off"/>
+          <div class="chips" id="chips-categories" aria-label="Categorias"></div>
+          <select id="sort" class="select" aria-label="Ordenar por">
+            <option value="eta">Mais rápido</option>
+            <option value="rating">Melhor avaliados</option>
+            <option value="distance">Mais perto</option>
+            <option value="fee">Menor taxa</option>
+          </select>
+        </div>
+      </header>
+
+      <section id="grid" class="restaurant-grid" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <!-- Services -->
+  <script src="js/services/catalog.js" defer></script>
+  <script src="js/services/cart.js" defer></script>
+
+  <!-- UI -->
+  <script src="js/ui/sidebar.js" defer></script>
+  <script src="js/ui/theme-toggle.js" defer></script>
+
+  <!-- Página -->
+  <script src="js/pages/home.js" defer></script>
+</body>
+</html>

@@ -1,40 +1,65 @@
-/* Tema escuro/claro alinhado à marca (delivery) */
+/* ===== Tema Delivery — mantém seus tokens e acrescenta os que faltavam ===== */
+
+/* DARK como padrão (igual você já usa no <html data-bs-theme="dark">) */
 :root,
 :root[data-bs-theme="dark"]{
-  /* Dark base (seu fundo: #1B1610) */
+  /* Seus tokens originais */
   --bg:#1B1610;
   --surface:#221D16;
-  --primary:#F45A00;         /* ligeiramente mais escuro que #FF5900 p/ contraste */
+  --primary:#F45A00;         /* contraste melhor que #FF5900 no dark */
   --primary-600:#D85200;     /* hover/pressed */
   --text:#F5F5F5;
   --muted:#B9C0CA;
   --border:#2A241D;
   --ok:#00C49A; --warn:#FFC857; --danger:#FF3B30;
 
+  /* 🔹 Tokens adicionados (usados pela sidebar e novas páginas) */
+  --surface-1: var(--bg);            /* fundo geral / faixa lateral */
+  --surface-2: var(--border);        /* linhas/bordas sutis */
+  --text-strong:#FFFFFF;             /* texto forte */
+  --on-primary:#FFFFFF;              /* texto em botão/área primária */
+  --radius-2xl:18px;
+  --shadow-md: 0 4px 14px rgba(0,0,0,.10);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,.35);
+  --sidebar-w:260px;
+
+  /* Bridge p/ Bootstrap */
   --bs-body-bg:var(--bg);
   --bs-body-color:var(--text);
   --bs-border-color:var(--border);
   --bs-primary:var(--primary);
 }
 
-/* Light confortável (off-white) */
+/* LIGHT confortável (off-white) */
 :root[data-bs-theme="light"]{
+  /* Seus tokens originais (equivalentes no claro) */
   --bg:#FAF8F6;
   --surface:#FFFFFF;
-  --primary:#FF5900;         /* cor de marca pura no light */
+  --primary:#FF5900;
   --primary-600:#E25500;
   --text:#1B1610;
   --muted:#6B6B6B;
   --border:#E8E2DA;
   --ok:#00A884; --warn:#D98C00; --danger:#C0362C;
 
+  /* 🔹 Tokens adicionados (equivalentes no claro) */
+  --surface-1: var(--bg);
+  --surface-2: var(--border);
+  --text-strong:#1B1610;
+  --on-primary:#FFFFFF;
+  --radius-2xl:18px;
+  --shadow-md: 0 4px 14px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,.18);
+  --sidebar-w:260px;
+
+  /* Bridge p/ Bootstrap */
   --bs-body-bg:var(--bg);
   --bs-body-color:var(--text);
   --bs-border-color:var(--border);
   --bs-primary:var(--primary);
 }
 
-/* Integração com Bootstrap (apenas o necessário) */
+/* Integração com Bootstrap (mantida) */
 .btn-primary{
   --bs-btn-bg:var(--primary);
   --bs-btn-border-color:var(--primary);
@@ -42,5 +67,5 @@
   --bs-btn-hover-border-color:var(--primary-600);
 }
 
-/* Sidebar usa o fundo do tema */
+/* Compat com markup legado, caso apareça */
 .sidebar{ background:var(--bg); }
