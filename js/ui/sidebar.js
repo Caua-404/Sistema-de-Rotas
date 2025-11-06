@@ -14,7 +14,11 @@
       { href: 'motoboys.html',   label: 'Motoboys',     icon: '🛵' },
       { href: 'dashboard.html',  label: 'Relatório',    icon: '📈' },
       { href: 'settings.html',   label: 'Configuração', icon: '⚙️' },
+<<<<<<< HEAD
       { href: 'home.html',       label: 'Pedidos',      icon: '🍽️' },
+=======
+      { href: 'home.html',       label: 'Restaurantes', icon: '🍽️' },
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
       { href: 'cart.html',       label: 'Checkout',     icon: '🧾' },
       { href: 'track.html',      label: 'Acompanhar',   icon: '🗺️' },
       { href: 'courier.html',    label: 'Motoboy (PWA)',icon: '📲' },

@@ -41,6 +41,7 @@
 /* Controles sobre o mapa (posicionados) */
 .map-provider-switch{ position:absolute; right:16px; top:16px; z-index:1200; }
 .status{ position:absolute; right:16px; bottom:16px; z-index:1200; }
+<<<<<<< HEAD
 
 /* Hardening: nada além do mapa e overlays dentro de .map-wrap */
 .map-wrap > img,
@@ -49,3 +50,5 @@
 .map-wrap .hero {
   display: none !important;
 }
+=======
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a

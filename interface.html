@@ -5,25 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Moto Rotas — Interface</title>
 
+<<<<<<< HEAD
   <!-- Terceiros -->
+=======
+  <!-- CSS de terceiros -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css">
 
+<<<<<<< HEAD
   <!-- App CSS -->
+=======
+  <!-- CSS do app -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
   <link rel="stylesheet" href="css/themes/theme-delivery.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/components.sidebar.css">
+<<<<<<< HEAD
   <link rel="stylesheet" href="css/pages/map.css">
 
   <!-- Page CSS -->
+=======
+
+  <!-- CSS específico da página -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
   <link rel="stylesheet" href="css/pages/interface.css">
 </head>
 
 <body class="app">
+<<<<<<< HEAD
   <!-- Sidebar (injetada por js/ui/sidebar.js) -->
+=======
+  <!-- Sidebar (conteúdo é injetado pelo js/ui/sidebar.js) -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
   <aside id="sidebar" class="app-sidebar" aria-label="Menu lateral"></aside>
 
   <!-- Conteúdo -->
@@ -34,7 +51,11 @@
       <!-- Busca -->
       <div class="search" role="search" aria-label="Buscar">
         <input id="searchInput" class="search__input" type="search" autocomplete="off"
+<<<<<<< HEAD
                placeholder="Buscar pedido, cliente, endereço…" />
+=======
+               placeholder="Buscar cidade, estado, rua..." />
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
         <ul id="searchSuggest" class="search__suggestions" role="listbox" aria-label="Sugestões"></ul>
       </div>
 
@@ -45,6 +66,7 @@
           <span class="theme-switch__knob" aria-hidden="true"></span>
         </button>
 
+<<<<<<< HEAD
       <div class="userbox" id="userBox" aria-label="Usuário logado">
         <a href="settings.html" class="avatar-link" id="avatarLink" aria-label="Abrir configurações">
           <!-- Se a imagem falhar, o JS coloca as iniciais no data-initials -->
@@ -52,6 +74,14 @@
               src="assets/user.jpg" alt="Foto do perfil" />
         </a>
         <div class="greet">Olá, <strong id="greetName">Visitante</strong></div>
+=======
+        <div class="userbox" aria-label="Usuário logado">
+          <a href="settings.html" class="avatar-link" id="avatarLink" aria-label="Abrir configurações">
+            <img id="userAvatar" class="userbox__avatar" src="assets/user.jpg" alt="Avatar do usuário">
+          </a>
+          <div class="greet">Olá, <strong id="greetName">Visitante</strong></div>
+        </div>
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
       </div>
     </header>
 
@@ -61,7 +91,11 @@
         <!-- Leaflet map -->
         <div id="map" class="map" role="application" aria-label="Mapa de entregas"></div>
 
+<<<<<<< HEAD
         <!-- Waze -->
+=======
+        <!-- Waze embutido -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
         <div id="wazeWrap" class="map map--waze" hidden>
           <iframe id="wazeFrame"
                   title="Waze Live Map"
@@ -71,16 +105,24 @@
           </iframe>
         </div>
 
+<<<<<<< HEAD
         <!-- Troca de provedor -->
         <div class="map-provider-switch">
           <button id="btnProviderLeaflet" class="btnX btnX--ghost is-active" type="button">Leaflet</button>
           <button id="btnProviderWaze"   class="btnX btnX--ghost"           type="button">Waze</button>
+=======
+        <!-- Trocar provedor de mapa -->
+        <div class="map-provider-switch">
+          <button id="btnProviderLeaflet" class="btnX btnX--ghost is-active" type="button">Leaflet</button>
+          <button id="btnProviderWaze" class="btnX btnX--ghost" type="button">Waze</button>
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
         </div>
 
         <!-- FAB Status -->
         <button id="statusToggle" class="fab fab--status"
                 aria-label="Abrir status" aria-controls="statusPanel" aria-expanded="false">📦</button>
 
+<<<<<<< HEAD
         <!-- Painel de Status (alinhado aos estados atuais) -->
         <aside class="status is-collapsed" id="statusPanel">
           <h3 class="status__title">Status de Entregas</h3>
@@ -97,6 +139,19 @@
           </ul>
 
           <!-- Lista (cards) que o JS vai preencher com <li class="card" data-status="..."> -->
+=======
+        <!-- Painel de Status -->
+        <aside class="status is-collapsed" id="statusPanel">
+          <h3 class="status__title">Status de Entregas</h3>
+
+          <ul class="status__legend" role="list">
+            <li><button class="pill is-active" data-filter="all">Todos</button></li>
+            <li><button class="pill" data-filter="late">Atrasadas <b id="kpiLate">00</b></button></li>
+            <li><button class="pill" data-filter="done">Finalizadas <b id="kpiDone">00</b></button></li>
+            <li><button class="pill" data-filter="on">Em Andamento <b id="kpiOn">00</b></button></li>
+          </ul>
+
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
           <ul id="ordersList" class="cards" aria-live="polite"></ul>
         </aside>
       </section>
@@ -124,12 +179,20 @@
     </form>
   </section>
 
+<<<<<<< HEAD
   <!-- Terceiros JS -->
+=======
+  <!-- JS de terceiros -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
+<<<<<<< HEAD
   <!-- App JS -->
+=======
+  <!-- JS do app -->
+>>>>>>> 9b603892dc046c93a613b280bc65efc0466ebb5a
   <script src="js/ui/sidebar.js" defer></script>
   <script type="module" src="js/chat.js"></script>
   <script type="module" src="js/app.js"></script>
