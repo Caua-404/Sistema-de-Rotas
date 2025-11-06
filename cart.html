@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Moto Rotas — Checkout</title>
+
+  <!-- CSS do app (ordem padronizada) -->
+  <link rel="stylesheet" href="css/themes/theme-delivery.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/components.sidebar.css">
+
+  <!-- CSS da página -->
+  <link rel="stylesheet" href="css/pages/cart.css">
+</head>
+<body class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="app-sidebar" aria-label="Menu lateral"></aside>
+
+  <!-- Conteúdo -->
+  <div class="content">
+    <header class="topbar">
+      <button class="btn btn-icon only-mobile" id="btnOpenSidebar" aria-label="Abrir menu">☰</button>
+      <div class="topbar__right">
+        <a href="home.html" class="btnX btnX--ghost">Restaurantes</a>
+        <button id="themeToggle" class="theme-switch" type="button" aria-label="Alternar tema">
+          <span class="theme-switch__knob" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <header class="page-header">
+        <h1 class="page-title">Checkout</h1>
+      </header>
+
+      <div class="checkout-grid">
+        <section class="panel">
+          <h3>Endereço de entrega</h3>
+          <input id="addr-street" class="input" placeholder="Rua, número"/>
+          <div class="row2">
+            <input id="addr-city" class="input" placeholder="Cidade"/>
+            <input id="addr-zip" class="input" placeholder="CEP"/>
+          </div>
+          <label class="check"><input id="addr-pickup" type="checkbox"/> Retirar no local</label>
+        </section>
+
+        <section class="panel">
+          <h3>Pagamento</h3>
+          <select id="pay-method" class="select">
+            <option value="pix">PIX</option>
+            <option value="card">Cartão</option>
+            <option value="money">Dinheiro</option>
+          </select>
+          <input id="coupon" class="input" placeholder="Cupom (opcional)"/>
+        </section>
+
+        <aside class="summary panel" id="summary"></aside>
+      </div>
+
+      <div class="checkout-bottom">
+        <a id="btn-place" class="btn btn-primary">Confirmar pedido</a>
+      </div>
+    </main>
+  </div>
+
+  <!-- Services -->
+  <script src="js/services/catalog.js" defer></script>
+  <script src="js/services/cart.js" defer></script>
+  <script src="js/services/orders.js" defer></script>
+
+  <!-- UI -->
+  <script src="js/ui/sidebar.js" defer></script>
+  <script src="js/ui/theme-toggle.js" defer></script>
+
+  <!-- Página -->
+  <script src="js/pages/cart.js" defer></script>
+</body>
+</html>

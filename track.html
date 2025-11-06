@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Moto Rotas — Acompanhar pedido</title>
+
+  <!-- CSS do app (ordem padronizada) -->
+  <link rel="stylesheet" href="css/themes/theme-delivery.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/components.sidebar.css">
+
+  <!-- CSS da página -->
+  <link rel="stylesheet" href="css/pages/track.css">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+</head>
+<body class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="app-sidebar" aria-label="Menu lateral"></aside>
+
+  <!-- Conteúdo -->
+  <div class="content">
+    <header class="topbar">
+      <button class="btn btn-icon only-mobile" id="btnOpenSidebar" aria-label="Abrir menu">☰</button>
+      <div class="topbar__right">
+        <a href="home.html" class="btnX btnX--ghost">Restaurantes</a>
+        <button id="themeToggle" class="theme-switch" type="button" aria-label="Alternar tema">
+          <span class="theme-switch__knob" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="track-wrap" aria-label="Mapa e status do pedido">
+        <div id="map" class="map" role="application" aria-label="Mapa do pedido"></div>
+
+        <!-- overlay: botões do mapa -->
+        <div class="map-tools">
+          <button id="btnFit" class="btnX btnX--ghost" type="button" aria-label="Recentrar">Recentrar</button>
+        </div>
+
+        <!-- Painel de status -->
+        <aside class="timeline" id="timeline" aria-live="polite">
+          <header class="tl-head">
+            <div class="order-id" id="orderId">Pedido — </div>
+            <div class="eta" id="eta">ETA —</div>
+          </header>
+
+          <!-- NOVO: formulário de rastreio -->
+          <form id="trackForm" class="track-form" autocomplete="off">
+            <div class="tf-row">
+              <input id="trackCode" class="input" placeholder="Código do pedido (ex.: MR-123456)" />
+              <button class="btnX btnX--primary" type="submit">Buscar</button>
+            </div>
+            <input id="trackProduct" class="input" placeholder="Produto (opcional)" />
+          </form>
+
+          <!-- NOVO: info do produto -->
+          <div id="productInfo" class="product-info"></div>
+
+          <ol class="tl-steps" id="tlSteps">
+            <!-- preenchido via JS -->
+          </ol>
+
+          <footer class="tl-actions" id="tlActions">
+            <!-- ações (contatar loja/motoboy) via JS -->
+          </footer>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <!-- Services -->
+  <script src="js/services/orders.js" defer></script>
+  <script src="js/services/realtime.js" defer></script>
+
+  <!-- UI -->
+  <script src="js/ui/sidebar.js" defer></script>
+  <script src="js/ui/theme-toggle.js" defer></script>
+
+  <!-- Página -->
+  <script src="js/pages/track.js" defer></script>
+</body>
+</html>

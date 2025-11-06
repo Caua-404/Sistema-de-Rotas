@@ -1,0 +1,47 @@
+/* espaçamento consistente com o resto do app */
+.dash {
+  padding: 16px;
+}
+
+.page-title{
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+/* grade responsiva para KPIs e cartões */
+.dash-grid{
+  display: grid;
+  gap: var(--space-3, 1rem);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: stretch;
+}
+
+/* KPIs um pouco mais compactos */
+.dash-kpis .kpi { padding: 14px 16px; }
+.kpi__label{ color: var(--muted); font-weight: 700; }
+.kpi__value{
+  font-size: 1.8rem; font-weight: 900; line-height: 1.1;
+  margin-top: 2px; color: var(--text);
+}
+.kpi__delta{ margin-top: 4px; font-size: .9rem; color: var(--muted); }
+
+/* títulos dos cards */
+.cardX__title{
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* canvas ocupa o espaço do card */
+.cardX canvas{
+  width: 100% !important;
+  height: 300px !important;
+}
+
+/* tema claro: reforçar contraste nos KPIs */
+:root[data-bs-theme="light"] .kpi{
+  background: #fff;
+  border-color: #e8e6e2;
+}

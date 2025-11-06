@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Moto Rotas — Pedidos</title>
+
+  <!-- Tema + base -->
+  <link rel="stylesheet" href="css/themes/theme-delivery.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/components.sidebar.css">
+
+  <!-- Página -->
+  <link rel="stylesheet" href="css/pages/orders.css">
+</head>
+<body class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="app-sidebar" aria-label="Menu lateral"></aside>
+
+  <!-- Conteúdo -->
+  <div class="content">
+    <header class="topbar">
+      <button class="btn btn-icon only-mobile" id="btnOpenSidebar" aria-label="Abrir menu">☰</button>
+
+      <!-- Busca -->
+      <div class="search" role="search" aria-label="Buscar">
+        <input id="orderSearch" class="search__input" placeholder="Buscar pedido, cliente, endereço…">
+      </div>
+
+      <!-- Direita da topbar -->
+      <div class="topbar__right">
+        <div class="orders-filters" role="group" aria-label="Filtros">
+          <select id="marketFilter" class="selectX" aria-label="Marketplace">
+            <option value="">Todos os marketplaces</option>
+            <option value="ifood">iFood</option>
+            <option value="rappi">Rappi</option>
+            <option value="uber">Uber Eats</option>
+            <option value="aiqfome">AiQFome</option>
+            <option value="custom">MotoRotas API</option>
+          </select>
+
+          <select id="statusFilter" class="selectX" aria-label="Status do pedido">
+            <option value="">Todos os status</option>
+            <option value="PLACED">Recebidos</option>
+            <option value="PREPARING">Em preparo</option>
+            <option value="READY">Prontos</option>
+            <option value="DISPATCHED">Despachados</option>
+            <option value="DELIVERED">Entregues</option>
+            <option value="CANCELLED">Cancelados</option>
+          </select>
+
+          <button id="btnSync" class="btnX btnX--ghost" type="button">Sincronizar</button>
+        </div>
+
+        <!-- Saudação + Avatar -->
+        <div class="userbox" aria-label="Usuário logado">
+          <a href="settings.html" class="avatar-link" id="avatarLink" aria-label="Abrir configurações">
+            <img id="userAvatar" class="userbox__avatar" src="assets/user.jpg" alt="Avatar do usuário">
+          </a>
+          <div class="greet">Olá, <strong id="greetName">Visitante</strong></div>
+        </div>
+
+        <!-- Toggle de tema no final -->
+        <button id="themeToggle" class="theme-switch theme-switch--topbar" aria-label="Alternar tema">
+          <span class="theme-switch__knob" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main" role="main">
+      <section class="orders-head" aria-labelledby="ordersTitle">
+        <h1 class="page-title" id="ordersTitle">Pedidos</h1>
+      </section>
+
+      <!-- Grid de pedidos -->
+      <section class="orders-grid" id="ordersGrid" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <!-- Modal de atribuição -->
+  <dialog id="assignDialog" class="assign-modal">
+    <form method="dialog" class="assign-card" id="assignForm">
+      <header>
+        <h3>Atribuir pedido <span id="assignOrderId"></span></h3>
+        <button type="reset" class="btn btn-icon" id="assignClose" aria-label="Fechar">✕</button>
+      </header>
+      <div class="assign-body">
+        <div class="assign-map-hint">
+          * Para produção: aqui entra o mini mapa com raio. No mock, listamos motoboys próximos.
+        </div>
+        <ul id="couriersList" class="couriers-list"></ul>
+      </div>
+      <footer>
+        <button class="btnX btnX--ghost" value="cancel">Cancelar</button>
+        <button class="btnX btnX--primary" value="ok">Atribuir</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- JS comum -->
+  <script src="js/ui/sidebar.js" defer></script>
+  <script src="js/ui/theme-toggle.js" defer></script>
+
+  <!-- Serviços -->
+  <script type="module" src="js/services/marketplaces.js"></script>
+  <script type="module" src="js/services/orders.service.js"></script>
+  <script type="module" src="js/services/couriers.service.js"></script>
+  <script type="module" src="js/services/realtime.js"></script>
+
+  <!-- Página -->
+  <script type="module" src="js/pages/orders.js"></script>
+</body>
+</html>

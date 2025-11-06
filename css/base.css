@@ -1,0 +1,88 @@
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+  img, svg, video { max-width: 100%; display: block; }
+  button, input, textarea, select { font: inherit; }
+}
+
+@layer tokens {
+  :root {
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-1: 0 4px 12px rgba(0,0,0,.18);
+    --shadow-2: 0 10px 28px rgba(0,0,0,.22);
+
+    --space-1: .5rem;
+    --space-2: .75rem;
+    --space-3: 1rem;
+    --space-4: 1.25rem;
+    --space-5: 2rem;
+
+    --font-ui: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    --fs-base: 16px;
+  }
+}
+
+@layer base {
+  body {
+    font-family: var(--font-ui);
+    font-size: var(--fs-base);
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  .btn {
+    cursor: pointer;
+    border: 0;
+    background: none;
+    color: inherit;
+  }
+
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+
+  .only-mobile { display: none; }
+  @media (max-width: 960px) {
+    .only-mobile { display: inline-grid; }
+  }
+
+  .topbar__right {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .theme-controls {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+}
+
+/* Avatar com fallback de iniciais (quando não houver src) */
+#userAvatar[data-initials] {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: inline-grid; place-items: center;
+  background: color-mix(in oklab, var(--primary) 25%, var(--surface));
+  color: #fff; font-weight: 700;
+  font-family: var(--font-ui, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  /* remove espaço reservado da tag img; vira "badge" com texto */
+  content: attr(data-initials);
+}
+#userAvatar[data-initials]::before{
+  content: attr(data-initials);
+  font-size: .95rem;
+}
+
+/* avatar clicável → link para configurações */
+.avatar-link{ display:inline-block; border-radius:50%; outline:none; }
+.avatar-link:focus-visible{
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 40%, transparent);
+}
+#userAvatar{ cursor: pointer; }

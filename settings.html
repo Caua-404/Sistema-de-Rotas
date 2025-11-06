@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light">
+  <title>Moto Rota — Configurações</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Tema + Base (conferido com a sua árvore) -->
+  <link rel="stylesheet" href="css/themes/theme-delivery.css">
+  <link rel="stylesheet" href="css/base.css">
+
+  <!-- Componentes / Layout / Settings (conferidos) -->
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+
+  <!-- Topbar simples -->
+  <header class="topbar" style="position: sticky; top: 0; z-index: 30;">
+    <a href="interface.html" class="btn btn--ghost" style="text-decoration:none">← Voltar</a>
+
+    <div class="search" style="max-width:420px; margin-left:auto; margin-right:auto;">
+      <input class="search__input" type="search" placeholder="Buscar nas configurações…">
+      <ul class="search__suggestions" role="listbox" hidden></ul>
+    </div>
+
+    <div class="topbar__right">
+      <button id="themeToggle" class="theme-switch" type="button" aria-label="Alternar tema">
+        <span class="theme-switch__knob" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="settings" aria-labelledby="settingsTitle">
+    <!-- Perfil (cabeçalho) -->
+    <section class="profile" aria-labelledby="profileTitle">
+      <div class="profile__avatar-wrap">
+        <img id="settingsAvatar" class="profile__avatar" src="assets/user.jpg" alt="Foto do usuário" decoding="async" loading="eager" fetchpriority="high">
+        <button id="btnEditAvatar" class="profile__edit" type="button" title="Alterar foto" aria-label="Alterar foto">✏️</button>
+        <input id="avatarInput" type="file" accept="image/*" hidden>
+      </div>
+
+      <h1 id="profileTitle" class="profile__name"><span id="greetName">Usuário</span></h1>
+      <p class="profile__meta">
+        <b id="profileEmail">usuario@exemplo.com</b> •
+        CNPJ: <span id="profileCNPJ">00.000.000/0000-00</span>
+      </p>
+      <p class="profile__meta">Plano: <b id="profilePlan">Padrão</b> • Status: <b id="profileStatus">Ativo</b></p>
+    </section>
+
+    <!-- Grid de opções -->
+    <nav class="settings__grid" aria-label="Opções de configuração">
+      <a class="tile" href="#conta"><div class="tile__icon">👤</div><div class="tile__title">Dados da conta</div><div class="tile__desc">Nome, e-mail, telefone, CNPJ</div></a>
+      <a class="tile" href="#seguranca"><div class="tile__icon">🔐</div><div class="tile__title">Segurança</div><div class="tile__desc">Senha e 2FA</div></a>
+      <a class="tile" href="#aparencia"><div class="tile__icon">🎨</div><div class="tile__title">Aparência</div><div class="tile__desc">Tema claro/escuro</div></a>
+      <a class="tile" href="#idioma"><div class="tile__icon">🌎</div><div class="tile__title">Idioma</div><div class="tile__desc">Português, Espanhol...</div></a>
+      <a class="tile" href="#acessibilidade"><div class="tile__icon">🦾</div><div class="tile__title">Acessibilidade</div><div class="tile__desc">Fonte, contraste, animações</div></a>
+      <a class="tile" href="#notificacoes"><div class="tile__icon">🔔</div><div class="tile__title">Notificações</div><div class="tile__desc">E-mail, push</div></a>
+      <a class="tile" href="#privacidade"><div class="tile__icon">🛡️</div><div class="tile__title">Privacidade</div><div class="tile__desc">Localização, visibilidade</div></a>
+      <a class="tile" href="#sessoes"><div class="tile__icon">📱</div><div class="tile__title">Sessões & dispositivos</div><div class="tile__desc">Gerencie acessos</div></a>
+      <a class="tile" href="#dados"><div class="tile__icon">📦</div><div class="tile__title">Dados & LGPD</div><div class="tile__desc">Exportar / excluir</div></a>
+      <a class="tile" href="#pagamentos"><div class="tile__icon">💳</div><div class="tile__title">Pagamentos & planos</div><div class="tile__desc">Métodos e faturas</div></a>
+      <a class="tile" href="#integracoes"><div class="tile__icon">🔗</div><div class="tile__title">Integrações</div><div class="tile__desc">APIs e chaves</div></a>
+      <a class="tile" href="#sair"><div class="tile__icon">🚪</div><div class="tile__title">Sair</div><div class="tile__desc">Encerrar sessão</div></a>
+    </nav>
+
+    <!-- ===== Seções ===== -->
+
+    <!-- Dados da conta -->
+    <section id="conta" class="section" aria-labelledby="contaTitle">
+      <h3 id="contaTitle">Dados da conta</h3>
+      <div class="form-row">
+        <div class="row-2">
+          <div>
+            <label for="accType" class="form-label">Tipo de conta <span class="req" aria-hidden="true">*</span></label>
+            <select id="accType" class="form-select input" required>
+              <option value="PJ" selected>Pessoa Jurídica (PJ)</option>
+              <option value="PF">Pessoa Física (PF)</option>
+            </select>
+          </div>
+          <div>
+            <label for="name" class="form-label">Nome / Razão social <span class="req" aria-hidden="true">*</span></label>
+            <input id="name" class="input form-control" type="text" autocomplete="name" placeholder="Seu nome ou razão social" required>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div id="pjFields">
+            <label for="cnpj" class="form-label">CNPJ <span class="req" aria-hidden="true">*</span></label>
+            <input id="cnpj" class="input form-control" type="text" inputmode="numeric" placeholder="00.000.000/0000-00" required>
+            <small class="text-muted">Ex.: 12.345.678/0001-90</small>
+          </div>
+          <div id="pfFields" hidden>
+            <label for="cpf" class="form-label">CPF <span class="req" aria-hidden="true">*</span></label>
+            <input id="cpf" class="input form-control" type="text" inputmode="numeric" placeholder="000.000.000-00">
+            <small class="text-muted">Ex.: 123.456.789-09</small>
+          </div>
+          <div>
+            <label for="fantasia" class="form-label">Nome fantasia</label>
+            <input id="fantasia" class="input form-control" type="text" placeholder="Opcional">
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label for="email" class="form-label">E-mail (login) <span class="req" aria-hidden="true">*</span></label>
+            <input id="email" class="input form-control" type="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+          </div>
+          <div>
+            <label for="phone" class="form-label">Telefone / WhatsApp <span class="req" aria-hidden="true">*</span></label>
+            <input id="phone" class="input form-control" type="tel" inputmode="tel" placeholder="(00) 00000-0000" required>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label for="cep" class="form-label">CEP <span class="req" aria-hidden="true">*</span></label>
+            <input id="cep" class="input form-control" type="text" inputmode="numeric" placeholder="00000-000" required>
+          </div>
+          <div>
+            <label for="uf" class="form-label">UF <span class="req" aria-hidden="true">*</span></label>
+            <select id="uf" class="form-select input" required>
+              <option value="" selected disabled>Selecione</option>
+              <option>AC</option><option>AL</option><option>AM</option><option>AP</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MG</option><option>MS</option>
+              <option>MT</option><option>PA</option><option>PB</option><option>PE</option>
+              <option>PI</option><option>PR</option><option>RJ</option><option>RN</option>
+              <option>RO</option><option>RR</option><option>RS</option><option>SC</option>
+              <option>SE</option><option>SP</option><option>TO</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label for="logradouro" class="form-label">Logradouro <span class="req" aria-hidden="true">*</span></label>
+            <input id="logradouro" class="input form-control" type="text" placeholder="Rua, avenida..." required>
+          </div>
+          <div>
+            <label for="numero" class="form-label">Número <span class="req" aria-hidden="true">*</span></label>
+            <input id="numero" class="input form-control" type="text" inputmode="numeric" placeholder="000" required>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label for="bairro" class="form-label">Bairro <span class="req" aria-hidden="true">*</span></label>
+            <input id="bairro" class="input form-control" type="text" required>
+          </div>
+          <div>
+            <label for="cidade" class="form-label">Cidade <span class="req" aria-hidden="true">*</span></label>
+            <input id="cidade" class="input form-control" type="text" required>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label for="tz" class="form-label">Fuso horário</label>
+            <select id="tz" class="form-select input">
+              <option value="America/Sao_Paulo" selected>America/Sao_Paulo (GMT-3)</option>
+              <option value="America/Belem">America/Belem (GMT-3)</option>
+              <option value="UTC">UTC</option>
+            </select>
+          </div>
+          <div>
+            <label for="contactPref" class="form-label">Preferência de contato</label>
+            <select id="contactPref" class="form-select input">
+              <option value="whatsapp" selected>WhatsApp</option>
+              <option value="email">E-mail</option>
+              <option value="sms">SMS</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--ghost" type="button">Cancelar</button>
+          <button id="btnSaveAccount" class="btn btn--primary" type="button">Salvar alterações</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- As demais seções permanecem como você já tem (segurança, aparência, etc.) -->
+     <section id="seguranca" class="section" aria-labelledby="segTitle">
+  <h3 id="segTitle">Segurança</h3>
+
+  <!-- Troca de senha -->
+  <div class="form-row">
+    <div class="row-2">
+      <div>
+        <label for="currPass" class="form-label">Senha atual</label>
+        <input id="currPass" class="input form-control" type="password" autocomplete="current-password">
+      </div>
+      <div>
+        <label for="newPass" class="form-label">Nova senha</label>
+        <input id="newPass" class="input form-control" type="password" autocomplete="new-password" minlength="8">
+        <small class="text-muted d-block mt-1">
+          Requisitos: ≥ 8 chars, maiúscula, minúscula, número e símbolo.
+        </small>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div>
+        <label for="newPass2" class="form-label">Confirmar nova senha</label>
+        <input id="newPass2" class="input form-control" type="password" autocomplete="new-password" minlength="8">
+      </div>
+      <div>
+        <label class="form-label">Força da senha</label>
+        <div class="pw-meter" aria-live="polite">
+          <div class="pw-meter__bar" id="pwBar"></div>
+          <span class="pw-meter__label" id="pwLabel">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn--ghost" type="button">Cancelar</button>
+      <button id="btnUpdateSecurity" class="btn btn--primary" type="button">Atualizar senha</button>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <!-- 2FA -->
+  <div class="form-row">
+    <div class="row-2">
+      <div>
+        <label class="form-label">Autenticação em duas etapas (TOTP)</label>
+        <div class="d-flex align-items-center gap-2">
+          <input id="twofa" type="checkbox" class="form-check-input">
+          <label for="twofa" class="form-check-label">Ativar 2FA neste usuário</label>
+        </div>
+        <small class="text-muted d-block mt-1">
+          Use um app autenticador (Google Authenticator, Authy…).
+        </small>
+      </div>
+
+      <div>
+        <label class="form-label">Dispositivo confiável</label>
+        <div class="d-flex align-items-center gap-2">
+          <input id="trusted" type="checkbox" class="form-check-input">
+          <label for="trusted" class="form-check-label">Não pedir 2FA neste dispositivo por 30 dias</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="twofaSetup" class="twofa-setup" hidden>
+      <div class="twofa-setup__col">
+        <b>1) Escaneie o QR no app</b>
+        <div id="qrBox" class="qr-box" aria-label="QR Code provisório (mock)"></div>
+        <small class="text-muted">Alternativa: cole o código secreto no app.</small>
+      </div>
+      <div class="twofa-setup__col">
+        <b>2) Código secreto (guarde com segurança)</b>
+        <div class="secret-line"><code id="totpSecret">—</code>
+          <button id="copySecret" class="btn btn--ghost" type="button">Copiar</button>
+        </div>
+
+        <b class="mt-2 d-block">3) Códigos de backup</b>
+        <div class="d-flex gap-2 flex-wrap">
+          <button id="btnGenBackup" class="btn btn--muted" type="button">Gerar códigos</button>
+          <button id="btnShowBackup" class="btn btn--ghost" type="button" disabled>Ver/baixar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <!-- Alertas e regiões/IP -->
+  <div class="form-row">
+    <div class="row-2">
+      <div>
+        <label class="form-label">Alertas</label>
+        <div class="d-grid gap-2">
+          <div class="form-check">
+            <input id="alertNewDevice" class="form-check-input" type="checkbox" checked>
+            <label for="alertNewDevice" class="form-check-label">Alertar logins em novos dispositivos/regiões</label>
+          </div>
+          <div class="form-check">
+            <input id="alertPasswordChange" class="form-check-input" type="checkbox" checked>
+            <label for="alertPasswordChange" class="form-check-label">Alertar mudanças de senha</label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Lista de países/IP (opcional)</label>
+        <textarea id="allowList" class="form-control" rows="4" placeholder="Ex.: BR, PT, 200.200.0.0/16"></textarea>
+        <small class="text-muted d-block mt-1">Um por linha. Aplicação será feita no backend.</small>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btnSaveSecPrefs" class="btn btn--primary" type="button">Salvar preferências de segurança</button>
+    </div>
+  </div>
+
+  <!-- Modal de códigos de backup -->
+  <div id="backupModal" class="modalX" hidden>
+    <div class="modalX__dialog">
+      <h4 class="mb-2">Códigos de backup (guarde offline)</h4>
+      <ol id="backupList" class="backup-list"></ol>
+      <div class="d-flex gap-2 justify-content-end mt-3">
+        <button id="btnCopyBackup" class="btn btn--ghost" type="button">Copiar</button>
+        <button id="btnDownloadBackup" class="btn btn--muted" type="button">Baixar .txt</button>
+        <button id="btnCloseBackup" class="btn btn--primary" type="button">Fechar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="aparencia" class="section" aria-labelledby="aparTitle">
+  <h3 id="aparTitle">Aparência</h3>
+
+  <div class="form-row">
+    <!-- Tema -->
+    <div>
+      <label class="form-label">Tema</label>
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn--muted" type="button" data-theme="light">Claro</button>
+        <button class="btn btn--muted" type="button" data-theme="dark">Escuro</button>
+        <button class="btn btn--ghost" type="button" data-theme="system">Sistema</button>
+      </div>
+    </div>
+
+    <!-- Cor de destaque -->
+    <div>
+      <label class="form-label">Cor de destaque (marca)</label>
+      <div class="swatches">
+        <button class="swatch" type="button" data-accent="#FF5900" title="Laranja padrão"></button>
+        <button class="swatch" type="button" data-accent="#F97316" title="Laranja suave"></button>
+        <button class="swatch" type="button" data-accent="#EF4444" title="Vermelho"></button>
+        <button class="swatch" type="button" data-accent="#10B981" title="Verde"></button>
+        <button class="swatch" type="button" data-accent="#3B82F6" title="Azul"></button>
+        <label class="swatch swatch--picker" title="Personalizar">
+          <input id="accentPicker" type="color" value="#FF5900" aria-label="Escolher cor" />
+        </label>
+      </div>
+      <small class="text-muted d-block mt-1">Afeta botões, links e destaques.</small>
+    </div>
+
+    <!-- Densidade / Cantos -->
+    <div class="row-2">
+      <div>
+        <label for="density" class="form-label">Densidade</label>
+        <select id="density" class="form-select input">
+          <option value="comfortable" selected>Confortável</option>
+          <option value="compact">Compacta</option>
+        </select>
+      </div>
+      <div>
+        <label for="radius" class="form-label">Cantos</label>
+        <select id="radius" class="form-select input">
+          <option value="soft" selected>Arredondado</option>
+          <option value="round">Bem arredondado</option>
+          <option value="square">Quadrado</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Elevação -->
+    <div class="row-2">
+      <div>
+        <label for="elevation" class="form-label">Elevação (sombras)</label>
+        <select id="elevation" class="form-select input">
+          <option value="normal" selected>Padrão</option>
+          <option value="low">Baixa</option>
+          <option value="high">Alta</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btnResetAppearance" class="btn btn--ghost" type="button">Repor padrão</button>
+      <button id="btnSaveAppearance" class="btn btn--primary" type="button">Aplicar aparência</button>
+    </div>
+  </div>
+</section>
+
+<section id="idioma" class="section" aria-labelledby="langTitle">
+  <h3 id="langTitle">Idioma & Formatos</h3>
+
+  <div class="form-row">
+
+    <div class="row-2">
+      <!-- Idioma -->
+      <div>
+        <label for="lang" class="form-label">Idioma da interface</label>
+        <select id="lang" class="form-select input">
+          <option value="pt-BR" selected>Português (Brasil)</option>
+          <option value="es-ES">Español (España)</option>
+          <option value="en-US">English (United States)</option>
+        </select>
+        <small class="text-muted d-block mt-1">Altera textos, pluralização e acessibilidade.</small>
+      </div>
+
+      <!-- Moeda preferida -->
+      <div>
+        <label for="currency" class="form-label">Moeda preferida</label>
+        <select id="currency" class="form-select input">
+          <option value="BRL" selected>BRL — Real brasileiro</option>
+          <option value="USD">USD — US Dollar</option>
+          <option value="EUR">EUR — Euro</option>
+        </select>
+        <small class="text-muted d-block mt-1">Afeta preços e totais no app.</small>
+      </div>
+    </div>
+
+    <!-- Fuso (opcional aqui; também existe em Conta) -->
+    <div class="row-2">
+      <div>
+        <label for="tz" class="form-label">Fuso horário</label>
+        <select id="tz" class="form-select input">
+          <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</option>
+          <option value="America/Belem" selected>America/Belem (GMT-3)</option>
+          <option value="UTC">UTC</option>
+        </select>
+        <small class="text-muted d-block mt-1">Usado em agendas e registros.</small>
+      </div>
+
+      <!-- Direção do texto (automático) -->
+      <div>
+        <label for="dirMode" class="form-label">Direção do texto</label>
+        <select id="dirMode" class="form-select input">
+          <option value="auto" selected>Automático</option>
+          <option value="ltr">Esquerda → Direita</option>
+          <option value="rtl">Direita → Esquerda</option>
+        </select>
+        <small class="text-muted d-block mt-1">Automático define com base no idioma.</small>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div>
+      <label class="form-label">Pré-visualização</label>
+      <div class="i18n-preview" id="i18nPreview">
+        <div><b id="i18nHello">Olá</b> • <span id="i18nToday">Hoje é</span> <span id="i18nDate">—</span></div>
+        <div><span id="i18nNumber">—</span> • <span id="i18nPrice">—</span></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btnDetectLocale" class="btn btn--ghost" type="button">Detectar do navegador</button>
+      <button id="btnSaveLang" class="btn btn--primary" type="button">Aplicar idioma & formatos</button>
+    </div>
+  </div>
+</section>
+
+<section id="acessibilidade" class="section" aria-labelledby="accTitle">
+  <h3 id="accTitle">Acessibilidade</h3>
+
+  <div class="form-row">
+    <!-- Contraste -->
+    <div>
+      <label class="form-label">Contraste</label>
+      <div class="d-flex gap-2 flex-wrap">
+        <label><input type="checkbox" id="accHighContrast"> Alto contraste</label>
+      </div>
+    </div>
+
+    <!-- Animações -->
+    <div>
+      <label class="form-label">Animações</label>
+      <div class="d-flex gap-2 flex-wrap">
+        <label><input type="checkbox" id="accReduceMotion"> Reduzir / desabilitar animações</label>
+      </div>
+    </div>
+
+    <!-- Texto -->
+    <div class="row-2">
+      <div>
+        <label for="accFontSize" class="form-label">Tamanho do texto</label>
+        <select id="accFontSize" class="form-select input">
+          <option value="normal" selected>Normal</option>
+          <option value="large">Grande</option>
+          <option value="xlarge">Extra grande</option>
+        </select>
+      </div>
+      <div>
+        <label><input type="checkbox" id="accExtraSpacing"> Espaçamento extra entre linhas</label>
+      </div>
+    </div>
+
+    <!-- Fonte alternativa -->
+    <div>
+      <label><input type="checkbox" id="accReadableFont"> Usar fonte mais legível</label>
+    </div>
+
+    <!-- Daltonismo -->
+    <div>
+      <label for="accColorBlind" class="form-label">Modo daltonismo</label>
+      <select id="accColorBlind" class="form-select input">
+        <option value="none" selected>Nenhum</option>
+        <option value="deuteranopia">Deuteranopia</option>
+        <option value="protanopia">Protanopia</option>
+        <option value="tritanopia">Tritanopia</option>
+      </select>
+    </div>
+
+    <!-- Navegação -->
+    <div>
+      <label><input type="checkbox" id="accKeyboardNav"> Destacar navegação por teclado</label>
+    </div>
+
+    <div class="actions">
+      <button id="btnResetAcc" class="btn btn--ghost" type="button">Repor padrão</button>
+      <button id="btnSaveAcc" class="btn btn--primary" type="button">Aplicar acessibilidade</button>
+    </div>
+  </div>
+</section>
+
+<section id="notificacoes" class="section" aria-labelledby="notifTitle">
+  <h3 id="notifTitle">Notificações</h3>
+
+  <div class="form-row">
+    <!-- Canais -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Canais</label>
+        <div class="d-grid gap-2">
+          <label><input id="notifEmail" type="checkbox" class="form-check-input" checked> E-mail</label>
+          <label><input id="notifPush"  type="checkbox" class="form-check-input"> Push do navegador</label>
+          <small class="text-muted">Ao ativar Push, o navegador pode pedir permissão.</small>
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label">Preferências do push</label>
+        <div class="d-grid gap-2">
+          <label><input id="notifSound" type="checkbox" class="form-check-input"> Tocar som</label>
+          <label><input id="notifVibrate" type="checkbox" class="form-check-input"> Vibrar (mobile)</label>
+          <label><input id="notifRequireInteract" type="checkbox" class="form-check-input"> Exigir interação</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tópicos / eventos -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Tópicos (eventos)</label>
+        <div class="d-grid gap-2">
+          <label><input id="topicOrders"   type="checkbox" class="form-check-input" checked> Pedidos e atualizações</label>
+          <label><input id="topicStatus"   type="checkbox" class="form-check-input" checked> Operação e status</label>
+          <label><input id="topicSecurity" type="checkbox" class="form-check-input" checked> Segurança (logins / 2FA / senhas)</label>
+          <label><input id="topicMarketing"type="checkbox" class="form-check-input"> Comunicados e ofertas</label>
+        </div>
+      </div>
+
+      <div>
+        <label for="notifFrequency" class="form-label">Frequência</label>
+        <select id="notifFrequency" class="form-select input">
+          <option value="immediate" selected>Imediata</option>
+          <option value="hourly">Resumo por hora</option>
+          <option value="daily">Resumo diário</option>
+          <option value="weekly">Resumo semanal</option>
+        </select>
+        <small class="text-muted d-block mt-1">Resumos agrupam múltiplos eventos.</small>
+      </div>
+    </div>
+
+    <!-- Horário silencioso -->
+    <div>
+      <label class="form-label">Horário silencioso</label>
+      <div class="quiet-row">
+        <div>
+          <label for="quietStart" class="form-label">Início</label>
+          <input id="quietStart" class="form-control input" type="time" value="22:00">
+        </div>
+        <div>
+          <label for="quietEnd" class="form-label">Fim</label>
+          <input id="quietEnd" class="form-control input" type="time" value="07:00">
+        </div>
+        <div class="d-flex align-items-end">
+          <label class="ms-2"><input id="quietEnabled" type="checkbox" class="form-check-input" checked> Ativar horário silencioso</label>
+        </div>
+      </div>
+      <small class="text-muted d-block mt-1">Durante este período, apenas alertas críticos de segurança serão exibidos.</small>
+    </div>
+
+    <!-- Teste -->
+    <div>
+      <label class="form-label">Teste</label>
+      <div class="d-flex gap-2 flex-wrap">
+        <button id="btnTestNotif" class="btn btn--muted" type="button">Enviar notificação de teste</button>
+        <span id="notifStatus" class="text-muted"></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btnResetNotif" class="btn btn--ghost" type="button">Repor padrão</button>
+      <button id="btnSaveNotif"  class="btn btn--primary" type="button">Salvar notificações</button>
+    </div>
+  </div>
+</section>
+
+<section id="privacidade" class="section" aria-labelledby="privTitle">
+  <h3 id="privTitle">Privacidade</h3>
+
+  <div class="form-row">
+    <!-- Compartilhamento de localização -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Compartilhar localização</label>
+        <div class="d-grid gap-2">
+          <label><input id="pvShareLocation" type="checkbox" class="form-check-input"> Compartilhar em tempo real com a operação</label>
+          <div class="row-2">
+            <div>
+              <label for="pvLocationAccuracy" class="form-label">Precisão</label>
+              <select id="pvLocationAccuracy" class="form-select input">
+                <option value="approx" selected>Aproximada (bairro)</option>
+                <option value="precise">Precisa (GPS)</option>
+              </select>
+            </div>
+            <div>
+              <label for="pvLocationDuration" class="form-label">Duração</label>
+              <select id="pvLocationDuration" class="form-select input">
+                <option value="off" selected>Até desligar</option>
+                <option value="1h">1 hora</option>
+                <option value="8h">8 horas</option>
+                <option value="24h">24 horas</option>
+              </select>
+            </div>
+          </div>
+          <small class="text-muted">A qualquer momento você pode interromper o compartilhamento.</small>
+        </div>
+      </div>
+
+      <!-- Visibilidade -->
+      <div>
+        <label class="form-label">Visibilidade</label>
+        <div class="d-grid gap-2">
+          <label><input id="pvShowStatus" type="checkbox" class="form-check-input" checked> Mostrar status online</label>
+          <label><input id="pvReadReceipts" type="checkbox" class="form-check-input" checked> Enviar confirmações de leitura</label>
+          <label><input id="pvDiscoverByEmail" type="checkbox" class="form-check-input"> Permit ir que encontrem meu perfil por e-mail</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics / personalização -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Medições e diagnóstico</label>
+        <div class="d-grid gap-2">
+          <label><input id="pvAnalytics" type="checkbox" class="form-check-input" checked> Permitir analytics anônimo</label>
+          <label><input id="pvCrash" type="checkbox" class="form-check-input" checked> Enviar relatórios de erro</label>
+        </div>
+        <small class="text-muted">Usamos apenas para melhorar o produto. Nada sensível é coletado.</small>
+      </div>
+      <div>
+        <label class="form-label">Personalização</label>
+        <div class="d-grid gap-2">
+          <label><input id="pvPersonalize" type="checkbox" class="form-check-input" checked> Sugestões personalizadas no app</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integrações / escopos -->
+    <div>
+      <label class="form-label">Integrações conectadas</label>
+      <div id="pvScopes" class="scopes-list">
+        <!-- exemplos (mock) -->
+        <div class="scope-item">
+          <div class="scope-head">
+            <b>Webhook — ERP</b>
+            <button class="btn btn--ghost btn-sm" type="button" data-scope="erp">Revogar</button>
+          </div>
+          <small class="text-muted">Escopos: pedidos:read, pedidos:write</small>
+        </div>
+        <div class="scope-item">
+          <div class="scope-head">
+            <b>Maps API</b>
+            <button class="btn btn--ghost btn-sm" type="button" data-scope="maps">Revogar</button>
+          </div>
+          <small class="text-muted">Escopos: geocode:read</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bloqueio -->
+    <div>
+      <label class="form-label">Usuários bloqueados</label>
+      <div class="blocklist">
+        <input id="pvBlockInput" class="form-control input" type="text" placeholder="E-mail ou ID do usuário">
+        <div class="d-flex gap-2 mt-2">
+          <button id="pvBlockAdd" class="btn btn--muted" type="button">Bloquear</button>
+          <button id="pvBlockClear" class="btn btn--ghost" type="button">Limpar lista</button>
+        </div>
+        <ul id="pvBlockList" class="list-group mt-2"></ul>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btnResetPrivacy" class="btn btn--ghost" type="button">Repor padrão</button>
+      <button id="btnSavePrivacy"  class="btn btn--primary" type="button">Salvar privacidade</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- Sessões & dispositivos -->
+<section id="sessoes" class="section" aria-labelledby="sessTitle">
+  <h3 id="sessTitle">Sessões & dispositivos</h3>
+
+  <div class="form-row">
+    <!-- Resumo -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge pill" id="sessCount">0 sessões ativas</span>
+        <span class="badge pill pill--accent" id="sessCurrent">Este dispositivo</span>
+      </div>
+      <div class="d-flex gap-2">
+        <button id="btnSessRefresh" class="btn btn--muted" type="button">Atualizar lista</button>
+        <button id="btnSessLogoutAll" class="btn btn--primary" type="button">Encerrar todas</button>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <ul id="sessList" class="sessions-list mt-2" aria-live="polite"></ul>
+
+    <!-- Aviso -->
+    <small class="text-muted d-block mt-2">
+      Dica: marque dispositivos confiáveis quando usar 2FA. Você pode revogar o acesso a qualquer momento.
+    </small>
+  </div>
+</section>
+
+
+<section id="dados" class="section" aria-labelledby="dataTitle">
+  <h3 id="dataTitle">Dados da conta</h3>
+
+  <div class="form-row">
+    <!-- Exportar / Portabilidade -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Cópia dos seus dados</label>
+        <div class="d-flex gap-2 flex-wrap">
+          <button id="btnDataRequest" class="btn btn--primary" type="button">Solicitar cópia (JSON)</button>
+          <button id="btnDataDownload" class="btn btn--muted" type="button" disabled>Baixar último pacote</button>
+        </div>
+        <small id="dataExportMeta" class="text-muted d-block mt-1">Nenhum pacote gerado ainda.</small>
+      </div>
+
+      <div>
+        <label class="form-label">Formato alternativo</label>
+        <div class="d-flex gap-2 flex-wrap">
+          <button id="btnDataCsv" class="btn btn--ghost" type="button">Exportar CSV (pedidos)</button>
+          <button id="btnDataPdf" class="btn btn--ghost" type="button">Exportar PDF (resumo)</button>
+        </div>
+        <small class="text-muted d-block mt-1">Exemplos para portabilidade; o backend definirá o escopo real.</small>
+      </div>
+    </div>
+
+    <!-- Retenção / Restrição -->
+    <div class="row-2">
+      <div>
+        <label for="dataRetention" class="form-label">Período de retenção</label>
+        <select id="dataRetention" class="form-select input">
+          <option value="6m">6 meses</option>
+          <option value="12m" selected>12 meses</option>
+          <option value="24m">24 meses</option>
+          <option value="indef">Indeterminado</option>
+        </select>
+        <small class="text-muted d-block mt-1">Define quanto tempo logs e históricos ficam disponíveis.</small>
+      </div>
+
+      <div>
+        <label class="form-label">Preferências de processamento</label>
+        <div class="d-grid gap-2">
+          <label><input id="dataRestrict" type="checkbox" class="form-check-input"> Restringir processamento (LGPD art. 18, IV)</label>
+          <label><input id="dataPersonalizePause" type="checkbox" class="form-check-input"> Pausar personalização baseada em perfil</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Retificação -->
+    <div>
+      <label class="form-label">Corrigir/retificar dados</label>
+      <div class="d-flex gap-2 flex-wrap">
+        <button id="btnRectifyOpen" class="btn btn--muted" type="button">Solicitar retificação</button>
+      </div>
+    </div>
+
+    <!-- Apagar conta -->
+    <div>
+      <label class="form-label">Exclusão de conta</label>
+      <div class="d-flex gap-2 flex-wrap">
+        <button id="btnEraseOpen" class="btn btn--ghost" type="button">Excluir conta (agendar em 7 dias)</button>
+        <button id="btnEraseCancel" class="btn btn--muted" type="button" hidden>Cancelar exclusão agendada</button>
+      </div>
+      <small id="eraseMeta" class="text-muted d-block mt-1">Ao agendar a exclusão, você poderá desfazer até a data limite.</small>
+    </div>
+  </div>
+
+  <!-- Modal: Retificação -->
+  <div id="rectifyModal" class="modalX" hidden>
+    <div class="modalX__dialog">
+      <h4 class="mb-2">Solicitar retificação</h4>
+      <label class="form-label">Descreva o que precisa ser corrigido</label>
+      <textarea id="rectifyText" class="form-control" rows="5" placeholder="Ex.: atualizar CNPJ, corrigir endereço…"></textarea>
+      <div class="d-flex gap-2 justify-content-end mt-3">
+        <button id="btnRectifyCancel" class="btn btn--ghost" type="button">Cancelar</button>
+        <button id="btnRectifySend" class="btn btn--primary" type="button">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Exclusão -->
+  <div id="eraseModal" class="modalX" hidden>
+    <div class="modalX__dialog">
+      <h4 class="mb-2">Confirmar exclusão</h4>
+      <p class="text-muted">Digite <b>EXCLUIR</b> e informe sua senha para confirmar. A exclusão será agendada para 7 dias.</p>
+      <div class="row-2">
+        <input id="eraseConfirmText" class="form-control" type="text" placeholder="EXCLUIR">
+        <input id="erasePassword" class="form-control" type="password" placeholder="Senha">
+      </div>
+      <div class="d-flex gap-2 justify-content-end mt-3">
+        <button id="btnEraseCancelModal" class="btn btn--ghost" type="button">Cancelar</button>
+        <button id="btnEraseSchedule" class="btn btn--primary" type="button">Agendar exclusão</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section id="lgpd" class="section" aria-labelledby="lgpdTitle">
+  <h3 id="lgpdTitle">LGPD & Consentimentos</h3>
+
+  <div class="form-row">
+    <!-- Cookies / finalidades -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Preferências de cookies</label>
+        <div class="d-grid gap-2">
+          <label><input type="checkbox" checked disabled> Essenciais (sempre ativos)</label>
+          <label><input id="ckFunctional" type="checkbox" class="form-check-input" checked> Funcionais</label>
+          <label><input id="ckAnalytics" type="checkbox" class="form-check-input" checked> Analytics</label>
+          <label><input id="ckMarketing" type="checkbox" class="form-check-input"> Marketing</label>
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label">Finalidades (consentimentos)</label>
+        <div class="d-grid gap-2">
+          <label><input id="consOps" type="checkbox" class="form-check-input" checked> Operação do serviço</label>
+          <label><input id="consPerso" type="checkbox" class="form-check-input" checked> Personalização</label>
+          <label><input id="consAnalyt" type="checkbox" class="form-check-input" checked> Mensuração/diagnóstico</label>
+          <label><input id="consMkt" type="checkbox" class="form-check-input"> Comunicação/marketing</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ledger / registro -->
+    <div>
+      <label class="form-label">Registro de consentimentos</label>
+      <div class="consent-table-wrap">
+        <table class="consent-table" aria-describedby="consentHelp">
+          <thead>
+            <tr><th>Finalidade</th><th>Status</th><th>Momento</th><th>Origem</th></tr>
+          </thead>
+          <tbody id="consentBody">
+            <!-- preenchido via JS -->
+          </tbody>
+        </table>
+      </div>
+      <small id="consentHelp" class="text-muted d-block mt-1">Você pode revogar a qualquer momento.</small>
+    </div>
+
+    <!-- Políticas e DPO -->
+    <div class="row-2">
+      <div>
+        <label class="form-label">Documentos</label>
+        <ul class="list-unstyled">
+          <li><a href="/politica-privacidade.html" class="auth__link">Política de privacidade</a></li>
+          <li><a href="/termos.html" class="auth__link">Termos de uso</a></li>
+        </ul>
+      </div>
+      <div>
+        <label class="form-label">Encarregado (DPO)</label>
+        <p class="m-0">E-mail: <a href="mailto:dpo@moto-rota.com" class="auth__link">dpo@moto-rota.com</a></p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="btnRevokeAll" class="btn btn--ghost" type="button">Revogar todos</button>
+      <button id="btnSaveLgpd" class="btn btn--primary" type="button">Salvar consentimentos</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- Pagamentos & planos -->
+<section id="payments" class="section" aria-labelledby="payTitle">
+  <h3 id="payTitle">Pagamentos & Planos</h3>
+
+  <div class="form-row">
+    <!-- Plano atual -->
+    <div>
+      <label class="form-label">Plano atual</label>
+      <p id="planCurrent" class="m-0">
+        Profissional — R$ 99,90 / mês
+        <span class="text-muted d-block">Renovação em 20/10/2025</span>
+      </p>
+      <div class="d-flex gap-2 mt-2">
+        <button id="btnChangePlan" class="btn btn--primary" type="button">Alterar plano</button>
+        <button id="btnCancelPlan" class="btn btn--ghost" type="button">Cancelar assinatura</button>
+      </div>
+    </div>
+
+    <!-- Método de pagamento -->
+    <div>
+      <label class="form-label">Método de pagamento</label>
+      <p id="payMethod" class="m-0">
+        Cartão Mastercard final •••• 1234
+        <span class="text-muted d-block">Validade 08/27</span>
+      </p>
+      <button id="btnUpdateCard" class="btn btn--muted mt-2" type="button">Atualizar cartão</button>
+    </div>
+
+    <!-- Histórico de faturas -->
+    <div>
+      <label class="form-label">Faturas</label>
+      <div class="consent-table-wrap">
+        <table class="consent-table">
+          <thead>
+            <tr><th>Data</th><th>Plano</th><th>Valor</th><th>Status</th><th>Ação</th></tr>
+          </thead>
+          <tbody id="invoiceBody">
+            <!-- preenchido via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal trocar plano -->
+  <div id="planModal" class="modalX" hidden>
+    <div class="modalX__dialog">
+      <h4 class="mb-2">Alterar plano</h4>
+      <select id="planSelect" class="form-select mb-3">
+        <option value="basic">Básico — R$ 49,90/mês</option>
+        <option value="pro" selected>Profissional — R$ 99,90/mês</option>
+        <option value="enterprise">Enterprise — R$ 299,90/mês</option>
+      </select>
+      <div class="d-flex gap-2 justify-content-end">
+        <button id="btnPlanCancel" class="btn btn--ghost">Cancelar</button>
+        <button id="btnPlanSave" class="btn btn--primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Integrações -->
+<section id="integracoes" class="section" aria-labelledby="intTitle">
+  <h3 id="intTitle">Integrações</h3>
+
+  <div class="form-row">
+    <!-- Grade de integrações -->
+    <div class="int-grid" id="intGrid">
+      <!-- Preenchido via JS -->
+    </div>
+
+    <!-- Logs / eventos recentes -->
+    <div>
+      <label class="form-label">Eventos recentes</label>
+      <div class="consent-table-wrap">
+        <table class="consent-table">
+          <thead>
+            <tr><th>Quando</th><th>Integração</th><th>Ação</th><th>Status</th><th>Detalhe</th></tr>
+          </thead>
+          <tbody id="intLogsBody">
+            <tr><td colspan="5">Nenhum evento ainda.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex gap-2 mt-2">
+        <button id="btnIntLogsClear" class="btn btn--ghost" type="button">Limpar logs</button>
+        <button id="btnIntSyncAll" class="btn btn--muted" type="button">Forçar sincronização</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal conectar/editar -->
+  <div id="intModal" class="modalX" hidden>
+    <div class="modalX__dialog">
+      <h4 class="mb-2"><span id="intModalTitle">Configurar</span></h4>
+
+      <div class="row-2">
+        <div>
+          <label for="intMode" class="form-label">Ambiente</label>
+          <select id="intMode" class="form-select">
+            <option value="test">Sandbox / Teste</option>
+            <option value="prod">Produção</option>
+          </select>
+        </div>
+        <div>
+          <label for="intBaseUrl" class="form-label">Base URL</label>
+          <input id="intBaseUrl" class="form-control" type="url" placeholder="https://api.exemplo.com">
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div>
+          <label for="intApiKey" class="form-label">API Key</label>
+          <input id="intApiKey" class="form-control" type="text" placeholder="chave pública">
+        </div>
+        <div>
+          <label for="intApiSecret" class="form-label">API Secret</label>
+          <input id="intApiSecret" class="form-control" type="password" placeholder="segredo">
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div>
+          <label class="form-label">Webhook (seu sistema)</label>
+          <input id="intWebhookUrl" class="form-control" type="url" placeholder="https://seusistema.com/webhook/moto-rota">
+          <small class="text-muted d-block mt-1">Configure esta URL no seu provedor quando aplicável.</small>
+        </div>
+        <div>
+          <label class="form-label">Segredo do webhook</label>
+          <input id="intWebhookSecret" class="form-control" type="text" placeholder="usado para assinar eventos">
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label">Escopos autorizados</label>
+        <div id="intScopesWrap" class="int-scopes">
+          <!-- checkboxes via JS -->
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-end mt-3">
+        <button id="btnIntCancel" class="btn btn--ghost" type="button">Cancelar</button>
+        <button id="btnIntSave" class="btn btn--primary" type="button">Salvar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sair -->
+<section id="logout" class="section" aria-labelledby="logoutTitle">
+  <h3 id="logoutTitle">Sair</h3>
+  <p>Encerrar sua sessão atual.</p>
+  <button id="btnLogout" class="btn btn--primary">Sair da conta</button>
+</section>
+
+  </main>
+
+  <!-- App base -->
+  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/settings/index.js"></script>
+
+  <!-- Loader modular: importa JS de cada seção sob demanda -->
+  <script type="module">
+    const loaders = {
+      '#conta':          () => import('./js/settings/account.js'),
+      '#seguranca':      () => import('./js/settings/security.js'),
+      '#aparencia':      () => import('./js/settings/appearance.js'),
+      '#idioma':         () => import('./js/settings/language.js'),
+      '#acessibilidade': () => import('./js/settings/accessibility.js'),
+      '#notificacoes':   () => import('./js/settings/notifications.js'),
+      '#privacidade':    () => import('./js/settings/privacy.js'),
+      '#sessoes':        () => import('./js/settings/sessions.js'),
+      '#dados':          () => import('./js/settings/data.js'),
+      '#lgpd':           () => import('./js/settings/lgpd.js'),
+      '#pagamentos':     () => import('./js/settings/payments.js'),
+      '#integracoes':    () => import('./js/settings/integrations.js'),
+      '#sair':           () => import('./js/settings/logout.js'),
+    };
+
+    // perfil (avatar + header) sempre
+    import('./js/settings/profile.js');
+
+    const loadForHash = async () => {
+      const h = location.hash || '#conta';
+      if (loaders[h]) await loaders[h]();
+    };
+    window.addEventListener('hashchange', loadForHash);
+    loadForHash();
+
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const id = e.target?.id;
+        if (e.isIntersecting && id && loaders['#'+id]) {
+          loaders['#'+id]();
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '200px' });
+    document.querySelectorAll('.section[id]').forEach(sec => io.observe(sec));
+  </script>
+</body>
+</html>
